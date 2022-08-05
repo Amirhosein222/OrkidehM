@@ -1,17 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Pressable, FlatList, View } from 'react-native';
+import { StatusBar, StyleSheet, FlatList, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import getLoginClient from '../../libs/api/loginClientApi';
 
 import { Container, Text, Snackbar } from '../../components/common';
 import { MemoriesCard } from '../../components/memories';
 
-import { COLORS } from '../../configs';
+import { useIsPeriodDay } from '../../libs/hooks';
+import getLoginClient from '../../libs/api/loginClientApi';
+
+import { COLORS, rh } from '../../configs';
 
 const MyMemoriesScreen = ({ navigation }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   const [myMemories, setMyMemories] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -69,11 +71,13 @@ const MyMemoriesScreen = ({ navigation }) => {
         barStyle="dark-content"
       />
       <View style={styles.content}>
-        <View />
         <Button
-          color={COLORS.blue}
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
           mode="contained"
-          style={[styles.btn, { width: '35%', height: 40, marginLeft: 30 }]}
+          style={[
+            styles.btn,
+            { width: '35%', height: 40, marginBottom: rh(1) },
+          ]}
           onPress={() =>
             navigation.navigate('AddMemory', {
               handleNewMemory: handleNewMemory,
@@ -85,14 +89,6 @@ const MyMemoriesScreen = ({ navigation }) => {
           }>
           <Text color="white">خاطره جدید</Text>
         </Button>
-        <Pressable onPress={() => navigation.openDrawer()}>
-          <MaterialCommunityIcons
-            name="menu"
-            color={COLORS.grey}
-            size={28}
-            style={{ marginRight: 20 }}
-          />
-        </Pressable>
       </View>
 
       <FlatList
@@ -116,7 +112,7 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   btn: {

@@ -1,36 +1,49 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  View,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  Pressable,
-  StatusBar,
-} from 'react-native';
+import { View, StyleSheet, Pressable, StatusBar } from 'react-native';
 
-import { Text } from '../../components/common';
-import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+import { Text, Header } from '../../components/common';
+
 import { useIsPeriodDay } from '../../libs/hooks';
+import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 
-const TopTabBar = ({ state, descriptors, navigation, periodTabs = false }) => {
-  const { routes, index } = state;
+const TopTabBar = ({
+  state,
+  descriptors,
+  navigation,
+  periodTabs = false,
+  seperated = false,
+}) => {
   const isPeriodDay = useIsPeriodDay();
+  const { routes, index } = state;
 
   const handleTabColors = (focused) => {
     if (isPeriodDay) {
       return focused ? COLORS.rossoCorsa : COLORS.dark;
     } else {
-      return focused ? COLORS.pink : COLORS.dark;
+      return focused ? COLORS.blue : COLORS.dark;
     }
   };
 
   return (
-    <View style={{ marginTop: STATUS_BAR_HEIGHT + rh(1) }}>
+    <View
+      style={{
+        // marginTop: STATUS_BAR_HEIGHT - rh(0.2),
+        backgroundColor: '#fff',
+      }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <Header
+        navigation={navigation}
+        style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+      />
       <View style={styles.container}>
         {routes.map((route, index) => {
           const { options } = descriptors[route.key];
           const focused = index === state.index;
-          const tintColor = focused ? '#9b59b6' : '#93a6b4';
           const onPress = () => {
             const event = navigation.emit({
               type: 'tabPress',
@@ -46,7 +59,7 @@ const TopTabBar = ({ state, descriptors, navigation, periodTabs = false }) => {
               style={{
                 borderBottomWidth: 2,
                 borderBottomColor: handleTabColors(focused),
-                width: '45%',
+                width: '50%',
                 paddingHorizontal: rw(4),
               }}
               key={route.key}

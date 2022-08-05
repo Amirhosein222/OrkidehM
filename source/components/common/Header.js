@@ -9,9 +9,19 @@ import { Text } from './index';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
+import { showSnackbar } from '../../libs/helpers';
 
 const Header = ({ navigation, style }) => {
   const { isPeriodDay } = useContext(WomanInfoContext);
+  const onSendLove = () => {
+    // setSnackbar({
+    //   msg: 'با موفقیت ارسال شد',
+    //   visible: true,
+    //   type: 'success',
+    // });
+    showSnackbar('با موفقیت ارسال شد', 'success');
+  };
+
   return (
     <View style={[styles.container, { ...style }]}>
       <View
@@ -21,7 +31,7 @@ const Header = ({ navigation, style }) => {
           alignItems: 'center',
         }}>
         <Pressable
-          onPress={() => alert('hello')}
+          onPress={onSendLove}
           style={{
             ...styles.sendLoveContainer,
             backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.blue,

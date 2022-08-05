@@ -60,7 +60,7 @@ const DrawerUi = ({ navigation }) => {
           relId: response.data.data.id,
           label: response.data.data.woman_name,
           image: response.data.data.woman_image,
-          mobile: response.data.data.mobile,
+          mobile: response.data.data.woman.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -147,9 +147,9 @@ const DrawerUi = ({ navigation }) => {
                     <Text color="white">{womanInfo.activeRel.label}</Text>
                   </View>
                 </View>
-                {/* <Text marginTop="5">
+                <Text marginTop="5">
                   {numberConverter(womanInfo.activeRel.mobile)}
-                </Text> */}
+                </Text>
               </View>
             )}
             <View style={styles.womanAvatarContainer}>
@@ -173,9 +173,9 @@ const DrawerUi = ({ navigation }) => {
                   <Text color="white">{womanInfo.fullInfo.display_name}</Text>
                 </View>
               </View>
-              {/* <Text marginTop="5">
+              <Text marginTop="5">
                 {numberConverter(womanInfo.fullInfo.mobile)}
-              </Text> */}
+              </Text>
             </View>
           </View>
 

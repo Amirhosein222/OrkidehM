@@ -8,8 +8,8 @@ let saveFullInfo;
 let saveActiveRel;
 
 const WomanInfoProvider = function ({ children }) {
-  const [rels, setRels] = useState({});
-  const [fullInfo, setFullInfo] = useState([]);
+  const [rels, setRels] = useState([]);
+  const [fullInfo, setFullInfo] = useState(null);
   const [activeRel, setActiveRel] = useState(null);
   const [settings, setSettings] = useState(null);
   const [registerStage, setRegisterStage] = useState(0);
@@ -42,7 +42,7 @@ const WomanInfoProvider = function ({ children }) {
     const result = pDays.find(
       (d) => moment(d.date, 'X').locale('en').format('YYYY-MM-DD') === today,
     );
-    setIsPeriodDay(result ? true : true);
+    setIsPeriodDay(result ? true : false);
   };
 
   return (

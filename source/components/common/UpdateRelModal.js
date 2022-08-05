@@ -44,7 +44,7 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
       return;
     }
     ImagePicker.openPicker({
-      width: 300,
+      width: 400,
       height: 400,
       cropping: true,
     }).then((image) => {
@@ -88,11 +88,16 @@ const UpdateModal = ({ visible, closeModal, relation }) => {
       formData.append('relation_id', relation.id);
       formData.append('gender', 'man');
       formData.append('woman_name', spouseName);
-      formData.append('woman_image', spousePicture);
+      if (spousePicture) {
+        formData.append('woman_image', {
+          uri: spousePicture,
+          name: 'spouseImg.png',
+          type: 'image/png',
+        });
+      }
 
       loginClient.post('update/relation', formData).then((response) => {
         setIsUpdating(false);
-        console.log('updating rel ', response.data);
         if (response.data.is_successful) {
           showSnackbar('تغییرات با موفقیت اعمال شد.', 'success');
           setSpouseName('');

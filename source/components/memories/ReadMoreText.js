@@ -4,7 +4,7 @@ import ReadMore from 'react-native-read-more-text';
 
 const ReadMoreText = ({ text }) => {
   const handleTextReady = () => {
-    console.log('ready!');
+    // console.log('ready!');
   };
 
   return (

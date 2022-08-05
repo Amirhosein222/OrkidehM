@@ -9,6 +9,7 @@ import { Text } from '../common';
 import { COLORS } from '../../configs';
 import { getFromAsyncStorage } from '../../libs/helpers';
 import ReadMore from '@fawazahmed/react-native-read-more';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const MemoriesCard = ({
   memory = null,
@@ -16,6 +17,7 @@ const MemoriesCard = ({
   navigation,
   handleNewMemory,
 }) => {
+  const isPeriodDay = useIsPeriodDay();
   const [liked, setLiked] = useState({ id: null, liked: false });
   const [info, setInfo] = useState(null);
   const styles = StyleSheet.create({
@@ -202,7 +204,9 @@ const MemoriesCard = ({
                 })
               }
               style={{ margin: 5 }}>
-              <Text color={COLORS.blue}>ویرایش</Text>
+              <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}>
+                ویرایش
+              </Text>
             </Pressable>
           ) : (
             <View />

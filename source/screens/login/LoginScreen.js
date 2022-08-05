@@ -125,26 +125,24 @@ const LoginScreen = ({ navigation, route }) => {
       });
       return false;
     }
-    if (validateInput(true)) {
-      if (biometryType !== null && biometryType !== undefined) {
-        FingerprintScanner.authenticate({
-          description: getMessage(),
+    if (biometryType !== null && biometryType !== undefined) {
+      FingerprintScanner.authenticate({
+        description: getMessage(),
+      })
+        .then(async () => {
+          await AsyncStorage.setItem('logedOut', 'false');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'HomeDrawer' }],
+            }),
+          );
         })
-          .then(async () => {
-            await AsyncStorage.setItem('logedOut', 'false');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'HomeDrawer' }],
-              }),
-            );
-          })
-          .catch((error) => {
-            console.log('Authentication error is => ', error);
-          });
-      } else {
-        console.log('biometric authentication is not available');
-      }
+        .catch((error) => {
+          console.log('Authentication error is => ', error);
+        });
+    } else {
+      console.log('biometric authentication is not available');
     }
   };
 
@@ -168,7 +166,6 @@ const LoginScreen = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    console.log('settings.data ', settings.data);
     if (settings.data && settings.data.is_successful) {
       const result = settings.data.data.find(
         (e) => e.key === 'app_image_login_page',
@@ -181,6 +178,12 @@ const LoginScreen = ({ navigation, route }) => {
       saveSettings(settingsObj);
     }
   }, [settings]);
+
+  useEffect(() => {
+    return () => {
+      FingerprintScanner.release();
+    };
+  }, []);
 
   return (
     <View style={styles.container}>

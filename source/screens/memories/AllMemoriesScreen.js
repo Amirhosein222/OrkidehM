@@ -1,12 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import {
-  StatusBar,
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StatusBar, ActivityIndicator, FlatList } from 'react-native';
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
@@ -84,16 +78,6 @@ const AllMemoriesScreen = ({ navigation }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <Pressable
-          onPress={() => navigation.openDrawer()}
-          style={{ alignSelf: 'flex-end', marginBottom: 10 }}>
-          <MaterialCommunityIcons
-            name="menu"
-            color={COLORS.grey}
-            size={28}
-            style={{ marginRight: 20 }}
-          />
-        </Pressable>
         {allMemories.length ? (
           <FlatList
             data={allMemories}

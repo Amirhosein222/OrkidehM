@@ -137,10 +137,10 @@ const SetPassword = ({ goToNextStage, nameAndPic, navigation }) => {
 
       loginClient
         .post('complete/profile', formData)
-        .then((response) => {
+        .then(async (response) => {
           setIsLoading(false);
           if (response.data.is_successful) {
-            AsyncStorage.setItem(
+            await AsyncStorage.setItem(
               'fullInfo',
               JSON.stringify(response.data.data),
             );

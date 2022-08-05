@@ -91,7 +91,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
           navigation={navigation}
           style={{ marginTop: STATUS_BAR_HEIGHT + rh(2), margin: 0 }}
         />
-        <Text large color={COLORS.blue}>
+        <Text large color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}>
           در حال حاضر هیچ تستی وجود ندارد!
         </Text>
 

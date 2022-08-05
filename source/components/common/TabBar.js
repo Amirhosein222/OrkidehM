@@ -27,10 +27,14 @@ const TabBar = ({
       <TouchableWithoutFeedback
         onPress={() => navigation.navigate('PeriodTabs')}>
         <View
-          style={{
-            ...styles.plusIconContainer,
-            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.blue,
-          }}>
+          style={
+            isPeriodDay
+              ? {
+                  ...styles.plusIconContainer,
+                  backgroundColor: COLORS.rossoCorsa,
+                }
+              : { ...styles.plusIconContainer }
+          }>
           <FontAwesome5 name="plus" size={25} color={COLORS.white} />
         </View>
       </TouchableWithoutFeedback>
@@ -43,9 +47,11 @@ const TabBar = ({
         <View
           style={{
             ...styles.container,
-            backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.lightBlue,
-            width: rw(100),
-            paddingHorizontal: rw(4),
+            backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.tabBarBg,
+            paddingHorizontal: rw(2),
+            width: rw(86),
+            height: rh(8.2),
+            borderRadius: 40,
           }}>
           <TouchableWithoutFeedback
             onPress={() =>
@@ -57,21 +63,18 @@ const TabBar = ({
               )
             }>
             <Image
-              style={{ left: rw(1) }}
+              style={{ left: rw(4) }}
               source={require('../../assets/images/tabIcon1.png')}
             />
           </TouchableWithoutFeedback>
 
-          {/* {isPeriodDay && renderPriodTabIcon(true, true)} */}
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('MemoriesTab')}>
             <Image
               source={require('../../assets/images/tabIcon2.png')}
-              style={
-                {
-                  // left: rw(3),
-                }
-              }
+              style={{
+                left: rw(3),
+              }}
             />
           </TouchableWithoutFeedback>
 
@@ -80,8 +83,7 @@ const TabBar = ({
             <Image
               source={require('../../assets/images/tabIcon3.png')}
               style={{
-                right: 0,
-                // left: rw(3),
+                left: rw(3),
               }}
             />
           </TouchableWithoutFeedback>
@@ -92,15 +94,21 @@ const TabBar = ({
     );
   } else {
     const { routes, index } = state;
-
+    const handlePeriodTabStyles = () => {
+      return isPeriodDay
+        ? { ...styles.plusIconContainer, backgroundColor: COLORS.rossoCorsa }
+        : styles.plusIconContainer;
+    };
     return (
       <View style={{ backgroundColor: 'white' }}>
         <View
           style={{
             ...styles.container,
-            backgroundColor: isPeriodDay ? COLORS.lightGrey : COLORS.lightBlue,
-            width: rw(100),
-            paddingHorizontal: rw(4),
+            backgroundColor: COLORS.tabBarBg,
+            width: rw(86),
+            height: rh(8.2),
+            borderRadius: 40,
+            paddingHorizontal: rw(2),
           }}>
           {routes.map((route, index) => {
             const { options } = descriptors[route.key];
@@ -122,14 +130,7 @@ const TabBar = ({
                 onPress={() => onPress()}
                 hitSlop={route.name === 'PeriodTabs' ? 22 : 2}
                 style={
-                  route.name === 'PeriodTabs'
-                    ? {
-                        ...styles.plusIconContainer,
-                        backgroundColor: isPeriodDay
-                          ? COLORS.rossoCorsa
-                          : COLORS.blue,
-                      }
-                    : {}
+                  route.name === 'PeriodTabs' ? handlePeriodTabStyles() : {}
                 }>
                 {options.tabBarIcon({
                   tintColor,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 50,
-    backgroundColor: COLORS.lightPink,
+    backgroundColor: COLORS.lightBlue,
     marginBottom: 10,
   },
   peridoTabPDayStyle: {
@@ -159,17 +160,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 35,
-    width: rw(12),
-    height: rh(5.5),
+    width: rw(18),
+    height: rh(8),
   },
   plusIconContainer: {
-    width: 35,
-    height: 35,
+    width: rw(13.5),
+    height: rh(6.5),
     borderRadius: 30,
     backgroundColor: COLORS.blue,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: rw(1),
+    marginRight: 3,
   },
 });
 

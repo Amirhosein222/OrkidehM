@@ -7,6 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { COLORS } from '../../configs';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const IconWithBg = ({
   width,
@@ -25,39 +26,49 @@ const IconWithBg = ({
   iconColor,
   elevation,
   loading = false,
- }) => {
+}) => {
   const IconContainer = styled.View`
-  width:  ${width ? width : '89px'};
-  height:  ${height ? height : '89px'};
-  background-color: ${bgColor ? bgColor : 'white'};
-  border-radius: ${borderRadius ? borderRadius : '40px'};
-  border-color: ${borderColor ? borderColor : 'white'};
-  border-width: ${borderWidth ? borderWidth : '0'};
-  align-items: center;
-  margin:  ${(props) => (props.margin) ? props.margin : '0px'};
-  margin-top:  ${marginTop ? marginTop : '0px'};
-  margin-bottom:  ${marginBottom ? marginBottom : '0px'};
-  margin-right:  ${marginRight ? marginRight : '0px'};
-  margin-left:  ${marginLeft ? marginLeft : '0px'};
-  justify-content: center;
-  align-self: ${alignSelf ? alignSelf : 'center'};
-  elevation: ${elevation ? elevation : '5'};
-`;
+    width: ${width ? width : '89px'};
+    height: ${height ? height : '89px'};
+    background-color: ${bgColor ? bgColor : 'white'};
+    border-radius: ${borderRadius ? borderRadius : '40px'};
+    border-color: ${borderColor ? borderColor : 'white'};
+    border-width: ${borderWidth ? borderWidth : '0'};
+    align-items: center;
+    margin: ${(props) => (props.margin ? props.margin : '0px')};
+    margin-top: ${marginTop ? marginTop : '0px'};
+    margin-bottom: ${marginBottom ? marginBottom : '0px'};
+    margin-right: ${marginRight ? marginRight : '0px'};
+    margin-left: ${marginLeft ? marginLeft : '0px'};
+    justify-content: center;
+    align-self: ${alignSelf ? alignSelf : 'center'};
+    elevation: ${elevation ? elevation : '5'};
+  `;
+  const isPeriodDay = useIsPeriodDay();
   return (
     <IconContainer>
-      {
-        loading ? (
-          <ActivityIndicator size="large" color={COLORS.blue} />
-        ) : icon === 'user-alt' ? (
-          <View>
-            <FontAwesome5 name={icon} size={iconSize} color={iconColor ?  iconColor : COLORS.white} />
-          </View>
-        ) : (
-          <View>
-            <MaterialCommunityIcons name={icon} size={iconSize} color={iconColor ?  iconColor : COLORS.white} />
-          </View>
-        )
-      }
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+        />
+      ) : icon === 'user-alt' ? (
+        <View>
+          <FontAwesome5
+            name={icon}
+            size={iconSize}
+            color={iconColor ? iconColor : COLORS.white}
+          />
+        </View>
+      ) : (
+        <View>
+          <MaterialCommunityIcons
+            name={icon}
+            size={iconSize}
+            color={iconColor ? iconColor : COLORS.white}
+          />
+        </View>
+      )}
     </IconContainer>
   );
 };

@@ -217,7 +217,10 @@ const AddMemoryScreen = ({ navigation, route }) => {
             isMemory={true}
           />
         ) : (
-          <ActivityIndicator size="large" color={COLORS.blue} />
+          <ActivityIndicator
+            size="large"
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+          />
         )}
 
         <Text marginTop="10" medium>

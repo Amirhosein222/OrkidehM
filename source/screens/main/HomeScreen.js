@@ -101,7 +101,7 @@ const HomeScreen = ({ navigation, route }) => {
           }
           response.data.data.map((rel) => {
             rels.push({
-              label: rel.man_name ? rel.man_name : 'بدون نام',
+              label: rel.woman_name ? rel.woman_name : 'بدون نام',
               value: rel.id,
               is_active: rel.is_active,
               is_verified: rel.is_verified,
@@ -113,9 +113,9 @@ const HomeScreen = ({ navigation, route }) => {
           if (activeRel) {
             saveActiveRel({
               relId: activeRel.id,
-              label: activeRel.man_name,
-              image: activeRel.man_image,
-              mobile: activeRel.man.mobile,
+              label: activeRel.woman_name,
+              image: activeRel.woman_image,
+              mobile: activeRel.woman.mobile,
             });
           }
           AsyncStorage.setItem('rels', JSON.stringify(rels));
@@ -136,7 +136,6 @@ const HomeScreen = ({ navigation, route }) => {
     formData.append('relation_id', value);
     formData.append('gender', 'man');
     loginClient.post('active/relation', formData).then((response) => {
-      console.log('res ', response.data);
       if (response.data.is_successful) {
         AsyncStorage.setItem(
           'lastActiveRelId',
@@ -146,7 +145,7 @@ const HomeScreen = ({ navigation, route }) => {
           relId: response.data.data.id,
           label: response.data.data.woman_name,
           image: response.data.data.woman_image,
-          mobile: response.data.data.mobile,
+          mobile: response.data.data.woman.mobile,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -271,140 +270,145 @@ const HomeScreen = ({ navigation, route }) => {
   }, [womanInfo.activeRel]);
 
   return (
-    console.log('isPeriodDay ', isPeriodDay),
-    (
-      <Container justifyContent="flex-start">
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle="dark-content"
+    <Container justifyContent="flex-start">
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+      <Header
+        navigation={navigation}
+        style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+      />
+      <Divider color={COLORS.lightBlue} width="80%" />
+      {isLoading ? (
+        <ActivityIndicator
+          size="large"
+          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
-        <Header
-          navigation={navigation}
-          style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
-        />
-        <Divider color={COLORS.lightBlue} width="80%" />
-        {isLoading ? (
-          <ActivityIndicator
-            size="large"
-            color={COLORS.blue}
-            style={{ marginTop: 'auto', marginBottom: 'auto' }}
-          />
-        ) : (
-          <ScrollView
-            style={{ width: '100%' }}
-            contentContainerStyle={{ flexGrow: 1 }}>
-            {womanInfo.relations.length && womanInfo.activeRel ? (
-              <View style={{ flex: 1 }}>
-                <View style={styles.pregnancyContainer}>
-                  <View style={{ margin: 5 }}>
-                    <Image
-                      source={require('../../assets/images/pa.png')}
-                      style={styles.sympIcon}
-                    />
-                    <Image
-                      source={require('../../assets/images/de.png')}
-                      style={styles.sympIcon}
-                    />
-                  </View>
-                  <View style={{ margin: 5 }}>
-                    <Image
-                      source={require('../../assets/images/de.png')}
-                      style={styles.sympIcon}
-                    />
-                    <Image
-                      source={require('../../assets/images/pa.png')}
-                      style={styles.sympIcon}
-                    />
-                  </View>
-
-                  <View>
-                    <Image
-                      source={
-                        isPeriodDay
-                          ? require('../../assets/images/600.png')
-                          : require('../../assets/images/500.png')
-                      }
-                      style={styles.pregPercentIcon}
-                    />
-
-                    {pregnancy ? (
-                      <View style={styles.pregnancyPercentText}>
-                        <Text bold medium color={COLORS.white}>
-                          {pregnancy}
-                        </Text>
-                        <Text color={COLORS.white}>احتمال بارداری</Text>
-                      </View>
-                    ) : (
-                      <View style={styles.pregnancyPercentText}>
-                        <ActivityIndicator size="large" color="white" />
-                      </View>
-                    )}
-                  </View>
+      ) : (
+        <ScrollView
+          style={{ width: '100%' }}
+          contentContainerStyle={{ flexGrow: 1 }}>
+          {womanInfo.relations.length && womanInfo.activeRel ? (
+            <View style={{ flex: 1 }}>
+              <View style={styles.pregnancyContainer}>
+                <View style={{ margin: 5 }}>
+                  <Image
+                    source={require('../../assets/images/pa.png')}
+                    style={styles.sympIcon}
+                  />
+                  <Image
+                    source={require('../../assets/images/de.png')}
+                    style={styles.sympIcon}
+                  />
+                </View>
+                <View style={{ margin: 5 }}>
+                  <Image
+                    source={require('../../assets/images/de.png')}
+                    style={styles.sympIcon}
+                  />
+                  <Image
+                    source={require('../../assets/images/pa.png')}
+                    style={styles.sympIcon}
+                  />
                 </View>
 
-                {fetchCalendar === false ? (
-                  <View>
-                    <CalendarList
-                      jalali
-                      markedDates={currentMarkedDates}
-                      hideExtraDays={true}
-                      disableMonthChange={false}
-                      firstDay={6}
-                      hideDayNames={false}
-                      showWeekNumbers={false}
-                      style={styles.calendar}
-                      theme={CALENDAR_THEME}
-                      markingType="simple"
-                      horizontal={true}
-                      pagingEnabled={false}
-                      onDayPress={() => {}}
-                    />
-                    <CalendarInfo />
-                  </View>
-                ) : (
-                  <ActivityIndicator
-                    size="large"
-                    color={COLORS.blue}
-                    style={{ marginTop: 'auto', marginBottom: 'auto' }}
+                <View>
+                  <Image
+                    source={
+                      isPeriodDay
+                        ? require('../../assets/images/600.png')
+                        : require('../../assets/images/500.png')
+                    }
+                    style={styles.pregPercentIcon}
                   />
-                )}
-              </View>
-            ) : womanInfo.relations.length && womanInfo.fullInfo ? (
-              <View
-                style={{
-                  width: '100%',
-                  alignItems: 'center',
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}>
-                <Picker
-                  data={womanInfo.relations}
-                  onItemSelect={onSelectSpouse}
-                  reset={resetPicker}
-                  placeholder={
-                    womanInfo.activeRel
-                      ? womanInfo.activeRel.label
-                      : 'انتخاب رابطه'
-                  }
-                  listMode="SCROLLVIEW"
-                />
-              </View>
-            ) : (
-              <NoRelation navigation={navigation} />
-            )}
-          </ScrollView>
-        )}
 
-        {snackbar.visible === true ? (
-          <Snackbar
-            message={snackbar.msg}
-            type={snackbar.type}
-            handleVisible={handleVisible}
-          />
-        ) : null}
-      </Container>
-    )
+                  {pregnancy ? (
+                    <View style={styles.pregnancyPercentText}>
+                      <Text bold medium color={COLORS.white}>
+                        {pregnancy}
+                      </Text>
+                      <Text color={COLORS.white}>احتمال بارداری</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.pregnancyPercentText}>
+                      <ActivityIndicator size="large" color="white" />
+                    </View>
+                  )}
+                </View>
+              </View>
+
+              {fetchCalendar === false ? (
+                <View>
+                  <CalendarList
+                    jalali
+                    markedDates={currentMarkedDates}
+                    hideExtraDays={true}
+                    disableMonthChange={false}
+                    firstDay={6}
+                    hideDayNames={false}
+                    showWeekNumbers={false}
+                    style={styles.calendar}
+                    theme={{
+                      ...CALENDAR_THEME,
+                      monthTextColor: isPeriodDay
+                        ? COLORS.rossoCorsa
+                        : COLORS.blue,
+                      textSectionTitleColor: isPeriodDay
+                        ? COLORS.rossoCorsa
+                        : COLORS.blue,
+                    }}
+                    markingType="simple"
+                    horizontal={true}
+                    pagingEnabled={false}
+                    onDayPress={() => {}}
+                  />
+                  <CalendarInfo />
+                </View>
+              ) : (
+                <ActivityIndicator
+                  size="large"
+                  color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+                  style={{ marginTop: 'auto', marginBottom: 'auto' }}
+                />
+              )}
+            </View>
+          ) : womanInfo.relations.length && womanInfo.fullInfo ? (
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                marginTop: 'auto',
+                marginBottom: 'auto',
+              }}>
+              <Picker
+                data={womanInfo.relations}
+                onItemSelect={onSelectSpouse}
+                reset={resetPicker}
+                placeholder={
+                  womanInfo.activeRel
+                    ? womanInfo.activeRel.label
+                    : 'انتخاب رابطه'
+                }
+                listMode="SCROLLVIEW"
+              />
+            </View>
+          ) : (
+            <NoRelation navigation={navigation} />
+          )}
+        </ScrollView>
+      )}
+
+      {snackbar.visible === true ? (
+        <Snackbar
+          message={snackbar.msg}
+          type={snackbar.type}
+          handleVisible={handleVisible}
+        />
+      ) : null}
+    </Container>
   );
 };
 

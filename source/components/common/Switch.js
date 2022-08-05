@@ -1,15 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Toggle from 'react-native-toggle-element';
 
 import Text from './Text';
 import { COLORS } from '../../configs';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const Switch = ({ active, changeStatus }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   return (
     <View style={styles.switchContainer}>
-      <Text small color={COLORS.blue}>
+      <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}>
         فعال
       </Text>
       <Toggle
@@ -21,13 +24,17 @@ const Switch = ({ active, changeStatus }) => {
         }}
         trackBar={{
           activeBackgroundColor: '#DDCECE',
-          inActiveBackgroundColor: COLORS.lightBlue,
+          inActiveBackgroundColor: isPeriodDay
+            ? COLORS.lightRed
+            : COLORS.lightBlue,
           width: 70,
           height: 35,
         }}
         thumbButton={{
           activeBackgroundColor: COLORS.grey,
-          inActiveBackgroundColor: COLORS.blue,
+          inActiveBackgroundColor: isPeriodDay
+            ? COLORS.rossoCorsa
+            : COLORS.blue,
           width: 35,
           height: 35,
         }}

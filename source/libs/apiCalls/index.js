@@ -6,8 +6,12 @@ import getManClient from '../api/manApi';
 export const verifyRelation = async function (code) {
   try {
     const token = await getAccessToken();
-    const res = await axios.get(
-      `https://orkidehapp.ir/verify/relation?code=${code}`,
+    const formData = new FormData();
+    formData.append('gender', 'man');
+    formData.append('code', code);
+    const res = await axios.post(
+      'https://orkidehapp.ir/api/user/verify/relation',
+      formData,
       {
         headers: {
           Authorization: `${token}`,
@@ -16,7 +20,7 @@ export const verifyRelation = async function (code) {
     );
     return res.data;
   } catch (error) {
-    // console.log('e ', error.response.status);
+    // console.log('e ', error.response);
     throw error;
   }
 };
@@ -35,12 +39,11 @@ export const buyGoldenAccount = async function () {
 };
 
 export const getSettings = async function (key) {
-  console.log('getting setting');
   try {
     const res = await axios.get('https://orkidehapp.ir/api/setting');
     return res.data;
   } catch (error) {
-    console.log('e ', error.response.status);
+    // console.log('e ', error.response.status);
     throw error;
   }
 };

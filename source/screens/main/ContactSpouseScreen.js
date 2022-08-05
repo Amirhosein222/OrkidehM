@@ -90,6 +90,7 @@ const ContactSpouseScreen = ({ navigation }) => {
       setSnackbar({
         msg: 'تصویر پروفایل با موفقیت انتخاب شد.',
         visible: true,
+        type: 'success',
       });
     });
   };
@@ -129,11 +130,9 @@ const ContactSpouseScreen = ({ navigation }) => {
       formData.append('include_man', 1);
       formData.append('include_woman', 1);
       formData.append('gender', 'man');
-      console.log('formData ', formData);
       loginClient
         .post('store/relation', formData)
         .then((response) => {
-          console.log('addings spouse ', response.data);
           setIsAdding(false);
           if (response.data.is_successful) {
             setSnackbar({
@@ -170,7 +169,6 @@ const ContactSpouseScreen = ({ navigation }) => {
   };
 
   const handleRelation = async function (task, id) {
-    console.log('handling');
     const loginClient = await getLoginClient();
     if (task === 'delete') {
       setIsDeleting({ id: id, deleting: true });
@@ -216,7 +214,6 @@ const ContactSpouseScreen = ({ navigation }) => {
       .get('index/relation?include_man=1&include_woman=1&gender=man')
       .then((response) => {
         setLoadingRelations(false);
-        console.log('my rels ', response.data.data);
         if (response.data.is_successful) {
           let rels = [];
           let activeRel = null;

@@ -1,28 +1,40 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import FormData from 'form-data';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { RadioButton, Checkbox } from 'react-native-paper';
+import Slider from '@react-native-community/slider';
+import { Checkbox } from 'react-native-paper';
 
-import { Text } from './index';
+import { Text } from '../common/index';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import getLoginClient from '../../libs/api/loginClientApi';
 import { showSnackbar } from '../../libs/helpers';
 
-import { COLORS, rh, rw } from '../../configs';
+import { baseUrl, COLORS, rh, rw } from '../../configs';
 
-const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
+const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
   const isPeriodDay = useIsPeriodDay();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
   const [fetchingMyMood, setFetchingMyMood] = useState(true);
   const [choosedRadio, setChoosedRadio] = useState(false);
   const [checkbox, setCheckbox] = useState(new Map([]));
-  const [moods, setMoods] = useState(null);
-  const [checkedRadio, setCheckedRadio] = React.useState(null);
+  const [moods, setMoods] = useState([]);
+  const [selectedMood, setSelectedMood] = React.useState(null);
 
+  const sliderValueHandler = async (value) => {
+    setSelectedMood(moods[value]);
+  };
   const getSymptomsMood = async function () {
     const loginClient = await getLoginClient();
     const formData = new FormData();
@@ -36,18 +48,20 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
     });
   };
 
-  const handleSelectedMood = async function (selectedmood) {
+  const handleSelectedMood = async function (mood) {
     setChoosedRadio(true);
     if (sign.is_multiple === 0) {
-      setCheckedRadio(selectedmood.id);
+      setIsSending(true);
       const moodObj = {
         gender: 'man',
-        sign_id: selectedmood.sign_id,
+        sign_id: selectedMood.sign_id,
         date: signDate,
-        mood_id: [selectedmood.id],
+        mood_id: [selectedMood.id],
       };
       const loginClient = await getLoginClient();
       loginClient.post('store/sign', moodObj).then((response) => {
+        setIsSending(false);
+
         setChoosedRadio(false);
         if (response.data.is_successful) {
           showSnackbar('با موفقیت ثبت شد', 'success');
@@ -59,13 +73,13 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
       });
     } else {
       const items = new Map([...checkbox]);
-      items.set(selectedmood.id);
+      items.set(mood.id);
       setCheckbox(items);
       const moodObj = {
         gender: 'man',
-        sign_id: selectedmood.sign_id,
+        sign_id: mood.sign_id,
         date: signDate,
-        mood_id: [selectedmood.id],
+        mood_id: [mood.id],
       };
       const loginClient = await getLoginClient();
       loginClient.post('store/sign', moodObj).then((response) => {
@@ -98,8 +112,8 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
             setCheckbox(items);
             if (item.sign_id === sign.id && sign.is_multiple === 0) {
               setChoosedRadio(true);
-              setCheckedRadio(item.mood.id);
-              showSnackbar('شما در این تاریخ قبلا این علامت را ثبت کرده اید!');
+              showSnackbar('شما در این تاریخ این علامت را ثبت کرده اید!');
+              closeModal();
             } else {
               getSymptomsMood();
             }
@@ -109,37 +123,23 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
         }
       } else {
         showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
+        closeModal();
       }
     });
   };
 
   const RenderMoods = ({ item }) => {
-    if (sign.is_multiple === 0) {
-      return (
-        <View style={styles.checkBox}>
-          <Text color={COLORS.dark}>{item.title}</Text>
-          <RadioButton
-            value={item.id}
-            status={checkedRadio === item.id ? 'checked' : 'unchecked'}
-            uncheckedColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
-            onPress={() => handleSelectedMood(item)}
-            disabled={choosedRadio ? true : false}
-          />
-        </View>
-      );
-    } else {
-      return (
-        <View style={styles.checkBox}>
-          <Text color={COLORS.dark}>{item.title}</Text>
-          <Checkbox
-            status={checkbox.has(item.id) ? 'checked' : 'unchecked'}
-            color={isPeriodDay ? COLORS.lightRed : COLORS.lightBlue}
-            onPress={() => handleSelectedMood(item)}
-            disabled={choosedRadio ? true : false}
-          />
-        </View>
-      );
-    }
+    return (
+      <View style={styles.checkBox}>
+        <Text color={COLORS.dark}>{item.title}</Text>
+        <Checkbox
+          status={checkbox.has(item.id) ? 'checked' : 'unchecked'}
+          color={isPeriodDay ? COLORS.lightRed : COLORS.lightPink}
+          onPress={() => handleSelectedMood(item)}
+          disabled={choosedRadio ? true : false}
+        />
+      </View>
+    );
   };
 
   useEffect(() => {
@@ -172,25 +172,86 @@ const SignsMoodModal = ({ visible, closeModal, sign, signDate }) => {
             color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
           />
         ) : (
-          <View style={{ width: '100%' }}>
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <View style={styles.header}>
               <AntDesign
                 onPress={() => closeModal()}
-                name="closecircle"
+                name="close"
                 size={26}
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+                color={COLORS.expSympTitle}
                 style={styles.closeIcon}
               />
             </View>
-            <Text color={COLORS.dark} large bold>
-              لطفا انتخاب کنید
-            </Text>
-            <FlatList
-              data={moods}
-              keyExtractor={(item) => item.id}
-              renderItem={RenderMoods}
-              style={{ width: '100%', marginTop: 20 }}
+            <Image
+              source={
+                sign.image
+                  ? { uri: baseUrl + sign.image }
+                  : require('../../assets/images/icons8-heart-100.png')
+              }
+              style={styles.icon}
             />
+            <Text color={COLORS.dark} large bold>
+              {sign.title}
+            </Text>
+            {!sign.is_multiple ? (
+              <View
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Slider
+                  style={{
+                    width: rw(82),
+                    height: 40,
+                    marginBottom: rh(1),
+                    marginTop: rh(1),
+                  }}
+                  minimumValue={0}
+                  maximumValue={moods.length - 1}
+                  step={1}
+                  onValueChange={sliderValueHandler}
+                  minimumTrackTintColor={COLORS.expSympTitle}
+                  maximumTrackTintColor="#000000"
+                  thumbTintColor={COLORS.expSympTitle}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: rw(80),
+                    justifyContent: 'space-between',
+                    paddingHorizontal: rw(2),
+                  }}>
+                  {!sign.is_multiple && moods.length
+                    ? moods.map((m) => <Text key={m.id}>{m.title}</Text>)
+                    : null}
+                </View>
+                <Pressable
+                  onPress={handleSelectedMood}
+                  disabled={choosedRadio}
+                  style={styles.submitBtn}>
+                  {isSending ? (
+                    <ActivityIndicator color="white" size="small" />
+                  ) : (
+                    <Text color="white">ثبت</Text>
+                  )}
+                </Pressable>
+              </View>
+            ) : (
+              <FlatList
+                data={moods}
+                keyExtractor={(item) => item.id}
+                renderItem={RenderMoods}
+                style={{
+                  marginTop: rh(2),
+                }}
+              />
+            )}
           </View>
         )}
       </View>
@@ -215,20 +276,26 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: COLORS.blue,
     borderRadius: 20,
-    height: '50%',
+    // height: '50%',
     justifyContent: 'center',
     elevation: 5,
     alignItems: 'center',
+    paddingVertical: rh(2),
   },
   checkBox: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     alignItems: 'center',
-    width: '40%',
-    alignSelf: 'center',
-    margin: 10,
+    alignSelf: 'flex-end',
+    marginVertical: rw(1.5),
   },
-  btn: { width: '40%', height: 40, margin: 20, alignSelf: 'center' },
+  submitBtn: {
+    width: '40%',
+    backgroundColor: COLORS.expSympTitle,
+    marginTop: rh(4),
+    borderRadius: 20,
+    height: 35,
+    justifyContent: 'center',
+  },
 });
 
-export default SignsMoodModal;
+export default SympDegreeModal;
