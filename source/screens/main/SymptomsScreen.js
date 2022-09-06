@@ -19,19 +19,18 @@ import {
 } from '../../libs/context/womanInfoContext';
 
 import {
-  Container,
-  Image,
+  BackgroundView,
   Text,
   Header,
   Divider,
-  TabBar,
   Snackbar,
   NoRelation,
   Picker,
+  Image,
 } from '../../components/common';
 import ExpectationCard from '../../components/common/ExpectationCard';
 
-import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+import { baseUrl, COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const SymptomsScreen = ({ navigation }) => {
@@ -102,9 +101,10 @@ const SymptomsScreen = ({ navigation }) => {
         );
         saveActiveRel({
           relId: response.data.data.id,
-          label: response.data.data.woman_name,
-          image: response.data.data.woman_image,
-          mobile: response.data.data.woman.mobile,
+          label: response.data.data.man_name,
+          image: response.data.data.man_image,
+          mobile: response.data.data.man.mobile,
+          birthday: response.data.data.man.birth_date,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -137,13 +137,17 @@ const SymptomsScreen = ({ navigation }) => {
           alignItems: 'center',
         }}>
         <View style={{ marginBottom: 'auto' }}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}>
+          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
             {item.sign.title} {item.mood.title}
           </Text>
         </View>
 
         <Image
-          imageSource={require('../../assets/images/pa.png')}
+          imageSource={
+            item.image
+              ? { uri: baseUrl + item.image }
+              : require('../../assets/images/pa.png')
+          }
           width="75px"
           height="75px"
           marginTop={rh(0.6)}
@@ -160,7 +164,7 @@ const SymptomsScreen = ({ navigation }) => {
   }, [womanInfo.activeRel]);
 
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -171,7 +175,6 @@ const SymptomsScreen = ({ navigation }) => {
           navigation={navigation}
           style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
         />
-        <Divider width="90%" color={COLORS.grey} style={{ marginBottom: 5 }} />
 
         {womanInfo.relations.length && womanInfo.activeRel ? (
           <View
@@ -179,7 +182,6 @@ const SymptomsScreen = ({ navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
               width: '100%',
-              // flex: 1,
             }}>
             <HorizontalDatePicker
               pickerType={'date'}
@@ -190,12 +192,17 @@ const SymptomsScreen = ({ navigation }) => {
               monthFormat="jMMMM"
               isShowYear={false}
               returnDateFormat={'jYYYY/jMM/jDD'}
-              datePickerContainerStyle={{ backgroundColor: 'white' }}
+              datePickerContainerStyle={{
+                backgroundColor: 'transparent',
+                marginTop: rh(2),
+              }}
               selectedTextStyle={styles.selectedDate}
               unSelectedTextStyle={styles.unselectedDate}
               isPeriodDay={isPeriodDay}
             />
-
+            <Text color={COLORS.grey} medium marginTop={rh(2)}>
+              علائم همسر
+            </Text>
             {spouseMoods.length ? (
               <FlatList
                 data={spouseMoods}
@@ -212,15 +219,12 @@ const SymptomsScreen = ({ navigation }) => {
                 style={{
                   width: '100%',
                   alignSelf: 'center',
-                  marginVertical: rh(3),
+                  marginVertical: rh(1),
                 }}>
                 {isLoading ? (
-                  <ActivityIndicator
-                    size="large"
-                    color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
-                  />
+                  <ActivityIndicator size="small" color={COLORS.primary} />
                 ) : (
-                  <Text marginBottom="10" color={COLORS.red}>
+                  <Text color={COLORS.red}>
                     علائمی برای این تاریخ ثبت نشده است.
                   </Text>
                 )}
@@ -228,11 +232,11 @@ const SymptomsScreen = ({ navigation }) => {
             )}
 
             <Divider
-              width="90%"
-              color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+              width={rw(80)}
+              color={COLORS.primary}
               style={{ marginTop: 5 }}
             />
-            <Text color={COLORS.grey} medium marginTop={rh(1)}>
+            <Text color={COLORS.grey} medium marginTop={rh(2)}>
               انتظارات همسر
             </Text>
 
@@ -240,10 +244,12 @@ const SymptomsScreen = ({ navigation }) => {
               <FlatList
                 data={expectations}
                 keyExtractor={(item) => String(item.id)}
+                style={{ flexGrow: 1 }}
                 contentContainerStyle={{
-                  justifyContent: 'center',
+                  justifyContent: 'flex-start',
                   alignSelf: 'center',
                   width: '100%',
+                  height: rh(40),
                 }}
                 renderItem={(item) => {
                   return <ExpectationCard exp={item.item} />;
@@ -251,10 +257,7 @@ const SymptomsScreen = ({ navigation }) => {
               />
             ) : isLoading ? (
               <View style={{ marginTop: rh(2) }}>
-                <ActivityIndicator
-                  size="large"
-                  color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
-                />
+                <ActivityIndicator size="small" color={COLORS.primary} />
               </View>
             ) : (
               <View>
@@ -277,7 +280,6 @@ const SymptomsScreen = ({ navigation }) => {
         )}
       </View>
 
-      <TabBar seperate={true} navigation={navigation} />
       {snackbar.visible === true ? (
         <Snackbar
           message={snackbar.msg}
@@ -285,7 +287,7 @@ const SymptomsScreen = ({ navigation }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
@@ -298,7 +300,8 @@ const styles = StyleSheet.create({
   },
   noRel: {
     width: '100%',
-    marginTop: 20,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   topContent: {
     flex: 1,
@@ -307,13 +310,13 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   selectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     color: COLORS.white,
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,

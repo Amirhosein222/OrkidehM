@@ -10,6 +10,7 @@ import {
   Snackbar,
   NoRelation,
   Picker,
+  BackgroundView,
 } from '../../components/common';
 import {
   ExpSympInfoModal,
@@ -106,6 +107,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           label: response.data.data.woman_name,
           image: response.data.data.woman_image,
           mobile: response.data.data.woman.mobile,
+          birthday: response.data.data.woman.birth_date,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -151,7 +153,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
   }, [womanInfo.activeRel]);
 
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -194,7 +196,7 @@ const HusbandExpectationsScreen = ({ navigation }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
@@ -209,7 +211,8 @@ const styles = StyleSheet.create({
   },
   noRel: {
     width: '100%',
-    marginTop: 20,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
   expTitleContainer: {
     flexDirection: 'row',

@@ -31,9 +31,8 @@ import {
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { WIDTH, COLORS, rh, rw } from '../../configs';
-import { CommonActions } from '@react-navigation/native';
 
-const SetPassword = ({ goToNextStage, nameAndPic, navigation }) => {
+const SetPassword = ({ goToNextStage, nameAndPic }) => {
   const { settings } = useContext(WomanInfoContext);
   let fullInfo = {};
   const [password, setPassword] = useState('');
@@ -137,21 +136,14 @@ const SetPassword = ({ goToNextStage, nameAndPic, navigation }) => {
 
       loginClient
         .post('complete/profile', formData)
-        .then(async (response) => {
+        .then((response) => {
           setIsLoading(false);
           if (response.data.is_successful) {
-            await AsyncStorage.setItem(
+            AsyncStorage.setItem(
               'fullInfo',
               JSON.stringify(response.data.data),
             );
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [
-                  { name: 'Welcome', params: { name: nameAndPic.name } },
-                ],
-              }),
-            );
+            goToNextStage(2);
           } else {
             setSnackbar({
               msg: 'متاسفانه مشکلی بوجود آمده است',
@@ -205,11 +197,12 @@ const SetPassword = ({ goToNextStage, nameAndPic, navigation }) => {
             ]}>
             <TextInput
               placeholder="رمز عبور را وارد کنید"
-              textColor={COLORS.blue}
-              phColor={COLORS.blue}
+              textColor={COLORS.primary}
+              phColor={COLORS.primary}
               style={styles.textInput}
               onChangeText={handleTextInput}
               inputName="password"
+              // secureTextEntry={true}
             />
             <Text small>رمز عبور جدید</Text>
           </Animated.View>
@@ -220,22 +213,27 @@ const SetPassword = ({ goToNextStage, nameAndPic, navigation }) => {
             ]}>
             <TextInput
               placeholder="رمز عبور را مجددا وارد کنید"
-              textColor={COLORS.blue}
-              phColor={COLORS.blue}
+              textColor={COLORS.primary}
+              phColor={COLORS.primary}
               style={styles.textInput}
               onChangeText={handleTextInput}
               inputName="repeatPass"
+              // secureTextEntry={true}
             />
             <Text small>تایید رمز عبور</Text>
           </Animated.View>
 
-          <Divider color={COLORS.blue} width="90%" style={{ marginTop: 20 }} />
+          <Divider
+            color={COLORS.primary}
+            width="90%"
+            style={{ marginTop: 20 }}
+          />
 
           <Text medium>فعالسازی اثر انگشت برای ورود به سیستم</Text>
 
           <Switch active={finger} changeStatus={setFinger} />
           <Button
-            color={COLORS.blue}
+            color={COLORS.primary}
             mode="contained"
             style={styles.btn}
             loading={isLoading ? true : false}
@@ -276,7 +274,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '65%',
-    borderRadius: 50,
+    borderRadius: 40,
     height: 45,
     marginRight: 10,
     paddingRight: rw(2),

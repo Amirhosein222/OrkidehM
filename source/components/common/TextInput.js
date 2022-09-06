@@ -23,7 +23,7 @@ const Input = ({
       backgroundColor: COLORS.lightBlue,
       color: textColor ? textColor : 'white',
       borderRadius: 5,
-      fontFamily: 'Vazir',
+      fontFamily: 'Qs_Iranyekan_bold',
     },
   });
   return (

@@ -10,7 +10,7 @@ import HorizontalDatePicker from '@logisticinfotech/react-native-horizontal-date
 
 import getLoginClient from '../../libs/api/loginClientApi';
 
-import { Container, Snackbar } from '../../components/common';
+import { BackgroundView, Container, Snackbar } from '../../components/common';
 import {
   ExpSympInfoModal,
   ExpSympCard,
@@ -93,16 +93,16 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
 
   if (!isLoading) {
     return (
-      <Container>
+      <BackgroundView>
         <ActivityIndicator
           size="large"
           color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
         />
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container>
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -118,7 +118,7 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
           isShowYear={false}
           returnDateFormat={'jYYYY/jMM/jDD'}
           datePickerContainerStyle={{
-            backgroundColor: 'white',
+            backgroundColor: 'transparent',
             marginTop: rh(2),
           }}
           selectedTextStyle={styles.selectedDate}
@@ -156,7 +156,7 @@ const PeriodSymptomsTabScreen = ({ navigation }) => {
             handleVisible={handleVisible}
           />
         ) : null}
-      </Container>
+      </BackgroundView>
     );
   }
 };
@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
     marginVertical: rh(2),
   },
   selectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     color: COLORS.white,
     textAlign: 'center',
   },
   unselectedDate: {
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     fontSize: 12,
     textAlign: 'center',
     color: COLORS.dark,

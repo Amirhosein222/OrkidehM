@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     paddingLeft: rw(2),
     marginTop: rh(2),
     elevation: 3,
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
   },
   btn: { width: '30%', height: 40, marginTop: 'auto', elevation: 3 },
 });

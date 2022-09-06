@@ -169,7 +169,7 @@ const SympDegreeModal = ({ visible, closeModal, sign, signDate }) => {
         {isLoading || fetchingMyMood ? (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           />
         ) : (
           <View

@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
   },
   inputAndroid: {
     fontSize: 14,
-    fontFamily: 'Vazir',
+    fontFamily: 'Qs_Iranyekan_bold',
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 1,

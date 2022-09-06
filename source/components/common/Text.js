@@ -24,7 +24,7 @@ const Text = styled.Text`
         break;
     }
   }}
-  font-family: ${(props) => props.bold ? 'Vazir-Bold' : 'Vazir'};
+  font-family: ${(props) => props.bold ? 'Qs_Iranyekan_bold' : 'Qs_Iranyekan_bold'};
   align-self: ${(props) => (props.alignSelf) ? props.alignSelf : 'center'};
   text-align: ${(props) => (props.textAlign) ? props.textAlign : 'center'};
   margin:  ${(props) => (props.margin) ? props.margin : 0}px;

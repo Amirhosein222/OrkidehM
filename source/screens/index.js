@@ -34,6 +34,14 @@ import AppGuideScreen from './about/AppGuideScreen';
 import DevelopersScreen from './about/DevelopersScreen';
 import WelcomeScreen from './about/WelcomeScreen';
 
+import SettingsScreen from './settings';
+import ProfileScreen from './profile';
+import { RelationsScreen, AddRelScreen, UpdateRelScreen } from './relations';
+import CyclesScreen from './informations/cycles';
+import PrivacyScreen from './informations/privacy';
+import RemindersScreen from './informations/reminders';
+import EditMobileScreen from './informations/editMobile';
+
 export {
   LoginScreen,
   VerificationScreen,
@@ -65,4 +73,13 @@ export {
   WelcomeScreen,
   LoveNotificationScreen,
   VerifyRelationScreen,
+  SettingsScreen,
+  ProfileScreen,
+  CyclesScreen,
+  PrivacyScreen,
+  RemindersScreen,
+  EditMobileScreen,
+  RelationsScreen,
+  AddRelScreen,
+  UpdateRelScreen,
 };

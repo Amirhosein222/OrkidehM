@@ -21,7 +21,7 @@
 
 //   return (
 //     <View>
-//       <Text marginTop="20" bold color={COLORS.blue}>
+//       <Text marginTop="20" bold color={COLORS.primary}>
 //         مقایسه خون ریزی دوره قاعدگی شما با همسالان شما
 //       </Text>
 //       <View style={{ height: 300, flexDirection: 'row' }}>
@@ -63,9 +63,12 @@ import { BarChart, YAxis } from 'react-native-svg-charts';
 
 import { Text } from '../common';
 import VerticalBar from './VerticalBar';
+
+import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS } from '../../configs';
 
 const ChartFour = ({ chartData, route }) => {
+  const isPeriodDay = useIsPeriodDay();
   let day = 1;
   const RenderBars = function (item) {
     return (
@@ -74,7 +77,7 @@ const ChartFour = ({ chartData, route }) => {
           <VerticalBar
             data={item.item.value}
             text={false}
-            color={COLORS.blue}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
           />
           <VerticalBar
             data={item.item.value}
@@ -82,13 +85,16 @@ const ChartFour = ({ chartData, route }) => {
             color={COLORS.dark}
           />
         </View>
-        <Text>{item.item.label}</Text>
+        <Text bold>{item.item.label}</Text>
       </View>
     );
   };
   return (
     <View style={{ height: 200, alignItems: 'center' }}>
-      <Text marginTop="20" bold color={COLORS.blue}>
+      <Text
+        marginTop="20"
+        bold
+        color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}>
         مقایسه خون ریزی دوره قاعدگی شما با همسالان شما
       </Text>
       <FlatList data={chartData.data} horizontal renderItem={RenderBars} />

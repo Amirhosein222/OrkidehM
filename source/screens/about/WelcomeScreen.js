@@ -1,11 +1,10 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useContext, useEffect } from 'react';
 import { CommonActions } from '@react-navigation/native';
 import { Pressable, StatusBar, StyleSheet, View } from 'react-native';
 
 import { Text } from '../../components/common';
-import { rh, rw } from '../../configs';
-import { COLORS } from '../../configs/styles';
+import { rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+import { COLORS, PALETTE } from '../../configs/styles';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const WelcomeScreen = ({ navigation, route }) => {
@@ -25,13 +24,13 @@ const WelcomeScreen = ({ navigation, route }) => {
       />
       <View
         style={{
-          marginTop: 'auto',
-          marginBottom: rh(3),
+          marginTop: STATUS_BAR_HEIGHT + rh(4),
+          // marginBottom: rh(3),
           alignItems: 'center',
         }}>
         <View style={{ flexDirection: 'row', marginTop: 'auto' }}>
           <Text color="white" large marginRight={rh(0.8)} bold>
-            جان
+            عزیزم
           </Text>
           <Text color="white" large bold>
             {params.name}
@@ -44,10 +43,10 @@ const WelcomeScreen = ({ navigation, route }) => {
       <View
         style={{
           width: rw(100),
-          paddingHorizontal: rw(3),
-          marginTop: rh(3),
+          paddingHorizontal: rw(2),
+          marginTop: rh(6),
         }}>
-        <Text large color="white" textAlign="right" marginRight={rw(3)}>
+        <Text large color="white" textAlign="right" marginRight={rw(2)}>
           ما تمام تلاشمون رو کردیم که تا حد امکان کار با این نرم افزار رو برات
           ساده و جذاب کنیم.
         </Text>
@@ -57,13 +56,14 @@ const WelcomeScreen = ({ navigation, route }) => {
           //   textAlign="right"
           marginRight={rw(0)}
           marginTop={rh(0)}>
-          قول میدم که ارکیده تورو شگفت زده میکنه.
+          قول میدم که ارکیده تورو شگفت زده میکنه
         </Text>
+
         <Text
           large
           color="white"
           textAlign="right"
-          marginRight={rw(4)}
+          marginRight={rw(2)}
           marginTop={rh(2)}>
           هر جایی که نفهمیدی باید چیکارکنی یا اینکه گیج شدی،از توی صفحه ی
           منو،وارد قسمت راهنمایی شو.اونجا توضیح کار با تمام بخش های نرم افزار
@@ -73,18 +73,12 @@ const WelcomeScreen = ({ navigation, route }) => {
           color="white"
           large
           textAlign="right"
-          marginRight={rw(4)}
+          marginRight={rw(2)}
           marginTop={rh(2)}>
           ما خوشحال میشیم که پیامهای گرمت رو در هر ساعت از شبانه روز بگیریم و
           بهشون پاسخ بدیم.
         </Text>
-        <Text
-          large
-          color="white"
-          marginTop={rh(5)}
-          textAlign="right"
-          bold
-          marginRight={rw(4)}>
+        <Text large color="white" marginTop={rh(6)} bold>
           یادت نره،ما یک خانواده ایم!
         </Text>
       </View>
@@ -99,7 +93,7 @@ const WelcomeScreen = ({ navigation, route }) => {
             }),
           )
         }>
-        <Text color="white" large>
+        <Text color={PALETTE.outerSpaceCrayola} large>
           ادامه
         </Text>
       </Pressable>
@@ -110,18 +104,19 @@ const WelcomeScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.welcomeBg,
+    backgroundColor: PALETTE.outerSpaceCrayola,
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    //
   },
   btn: {
     width: rw(85),
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.inputTabBarBg,
     height: rh(6),
     justifyContent: 'center',
     borderRadius: 30,
     marginTop: 'auto',
-    marginBottom: rh(6),
+    marginBottom: rh(4),
     elevation: 3,
   },
 });

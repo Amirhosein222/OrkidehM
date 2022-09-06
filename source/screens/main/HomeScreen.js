@@ -2,89 +2,103 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  View,
-  StatusBar,
-  StyleSheet,
-  ActivityIndicator,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { View, StatusBar, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CalendarList } from 'react-native-calendars-persian';
-import moment from 'moment-jalaali';
 import FormData from 'form-data';
 
-import Picker from '../../components/common/Picker';
-
+import { initPusher } from '../../libs/helpers';
 import getManClient from '../../libs/api/manApi';
-import getLoginClient from '../../libs/api/loginClientApi';
-
+import {
+  getSettings,
+  getWomanInfo,
+  getPusherUserId,
+} from '../../libs/apiCalls';
+import { useIsPeriodDay, useApi } from '../../libs/hooks';
 import {
   saveWomanRelations,
   WomanInfoContext,
   saveActiveRel,
 } from '../../libs/context/womanInfoContext';
-
-import { getFromAsyncStorage, showSnackbar } from '../../libs/helpers';
+import getLoginClient from '../../libs/api/loginClientApi';
+import {
+  getFromAsyncStorage,
+  showSnackbar,
+  numberConverter,
+} from '../../libs/helpers';
 
 import {
-  Container,
-  Divider,
+  BackgroundView,
   Text,
+  Image,
   Header,
   Snackbar,
   NoRelation,
+  Picker,
 } from '../../components/common';
 
-import { CalendarInfo } from '../../components/informations';
-
-import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
-import { useApi, useIsPeriodDay } from '../../libs/hooks';
-import { getSettings } from '../../libs/apiCalls';
-
-const CALENDAR_THEME = {
-  calendarBackground: '#ffffff',
-  textSectionTitleColor: COLORS.blue,
-  selectedDayBackgroundColor: '#00adf5',
-  selectedDayTextColor: '#ffffff',
-  todayTextColor: '#00adf5',
-  dayTextColor: '#2d4150',
-  textDisabledColor: '#d9e1e8',
-  dotColor: '#00adf5',
-  selectedDotColor: '#ffffff',
-  arrowColor: COLORS.blue,
-  monthTextColor: COLORS.blue,
-  textDayFontFamily: 'Vazir',
-  textMonthFontFamily: 'Vazir',
-  textDayHeaderFontFamily: 'Vazir',
-  textDayFontSize: 14,
-  textMonthFontSize: 14,
-  textDayHeaderFontSize: 10,
-};
+import { COLORS, STATUS_BAR_HEIGHT, rw, rh } from '../../configs';
 
 const HomeScreen = ({ navigation, route }) => {
   const params = route.params || {};
   const isPeriodDay = useIsPeriodDay();
   const {
     saveFullInfo,
+    fullInfo,
     handleUserPeriodDays,
     handleUserCalendar,
     settings,
     saveSettings,
   } = useContext(WomanInfoContext);
   const [setts, setSetts] = useApi(() => getSettings(''));
+  const [pusher, setPusher] = useApi(() => getPusherUserId(''));
+
   const [adsSettings, setAdsSetting] = useState(
     settings ? settings.app_text_ads : null,
   );
+  const [loginWomanInfo, setLoginWomanInfo] = useApi(() => getWomanInfo());
   const [pregnancy, setPregnancy] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadingPregnancy, setLoadingPregnancy] = useState(false);
   const [relations, setRelations] = useState([]);
-  const [currentMarkedDates, setCurrentMarkedDates] = useState([]);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [fetching, setFetching] = useState(true);
   const [resetPicker, setResetPicker] = useState(false);
-  const [fetchCalendar, setFetchCalendar] = useState(false);
   const womanInfo = useContext(WomanInfoContext);
+
+  const handleVisible = () => {
+    setSnackbar({
+      visible: !snackbar.visible,
+    });
+  };
+
+  const getPregnancyPercent = async function (relation) {
+    // setPregnancy(null);
+    const loginClient = await getLoginClient();
+    const formData = new FormData();
+    formData.append('gender', 'man');
+    formData.append('relation_id', relation);
+    loginClient.post('formula/pregnancy', formData).then((response) => {
+      if (response.data.is_successful) {
+        setPregnancy(response.data.data);
+      } else {
+        showSnackbar(response.data.message);
+      }
+    });
+  };
+
+  const getCalendar = async function (relation) {
+    const manClient = await getManClient();
+    const formData = new FormData();
+    formData.append('relation_id', relation);
+    manClient.post('show/calendar', formData).then((res) => {
+      if (res.data.is_successful) {
+        const periodDays = res.data.data.filter((d) => d.type === 'period');
+        handleUserCalendar(res.data.data);
+        handleUserPeriodDays(periodDays);
+      } else {
+        showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
+      }
+    });
+  };
 
   const getRelations = async function () {
     const lastActiveRel = await AsyncStorage.getItem('lastActiveRelId');
@@ -92,7 +106,7 @@ const HomeScreen = ({ navigation, route }) => {
     loginClient
       .get('index/relation?include_man=1&include_woman=1&gender=man')
       .then((response) => {
-        setIsLoading(false);
+        setFetching(false);
         let rels = [];
         let activeRel = null;
         if (response.data.is_successful) {
@@ -116,6 +130,7 @@ const HomeScreen = ({ navigation, route }) => {
               label: activeRel.woman_name,
               image: activeRel.woman_image,
               mobile: activeRel.woman.mobile,
+              birthday: activeRel.woman.birth_date,
             });
           }
           AsyncStorage.setItem('rels', JSON.stringify(rels));
@@ -146,6 +161,7 @@ const HomeScreen = ({ navigation, route }) => {
           label: response.data.data.woman_name,
           image: response.data.data.woman_image,
           mobile: response.data.data.woman.mobile,
+          birthday: response.data.data.woman.birth_date,
         });
         setSnackbar({
           msg: 'این رابطه به عنوان رابطه فعال شما ثبت شد.',
@@ -166,84 +182,45 @@ const HomeScreen = ({ navigation, route }) => {
     setActiveSpouse(spouse);
   };
 
-  const getPregnancyPercent = async function (relation) {
-    setPregnancy(null);
-    const loginClient = await getLoginClient();
-    const formData = new FormData();
-    formData.append('gender', 'man');
-    formData.append('relation_id', relation);
-    loginClient.post('formula/pregnancy', formData).then((response) => {
-      if (response.data.is_successful) {
-        setPregnancy(response.data.data);
-      } else {
-        showSnackbar(response.data.message);
-      }
-    });
-  };
-
-  // convert current dates from calendar api, then render on Calendar
-  const handleCurrentMarkedDates = function (calendar) {
-    const currentDates = {};
-    calendar.map((item) => {
-      const convertedDate = moment(item.date, 'X')
-        .locale('en')
-        .format('YYYY-MM-DD');
-
-      currentDates[convertedDate] = {
-        selected: true,
-        marked: true,
-        selectedColor:
-          item.type === 'period'
-            ? '#fe0294'
-            : item.type === 'sex'
-            ? COLORS.red
-            : item.type === 'period_f'
-            ? COLORS.orange
-            : item.type === 'ovulation_f'
-            ? COLORS.darkYellow
-            : COLORS.darkRed,
-        type: item.type,
-      };
-    });
-    setCurrentMarkedDates(currentDates);
-  };
-
-  const getCalendar = async function (relation) {
-    setFetchCalendar(true);
-    const manClient = await getManClient();
-    const formData = new FormData();
-    formData.append('relation_id', relation);
-    manClient.post('show/calendar', formData).then((res) => {
-      setFetchCalendar(false);
-      if (res.data.is_successful) {
-        handleCurrentMarkedDates([...res.data.data]);
-        const periodDays = res.data.data.filter((d) => d.type === 'period');
-        handleUserPeriodDays(periodDays);
-      } else {
-        showSnackbar('متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید');
-      }
-    });
-  };
-
-  const handleVisible = () => {
-    setSnackbar({
-      visible: !snackbar.visible,
-    });
+  const handlePusherInit = () => {
+    getFromAsyncStorage('pusherUid')
+      .then(async (res) => {
+        if (!res) {
+          initPusher(pusher.data.pusher_user_id, pusher.data.token);
+          await AsyncStorage.setItem('pusherUid', pusher.data.pusher_user_id);
+        }
+      })
+      .catch((e) => console.log(e));
   };
 
   useEffect(() => {
+    getRelations();
+  }, []);
+
+  useEffect(() => {
     !settings && setSetts();
-    // getFromAsyncStorage('fcmTokenSent').then((res) => {
-    //   if (!res) {
-    //     sendFcmToken();
-    //   }
-    // });
     getFromAsyncStorage('fullInfo').then((res) => {
       if (res) {
         saveFullInfo(JSON.parse(res));
       }
     });
+    setPusher();
   }, []);
+
+  useEffect(() => {
+    if (pusher.data && fullInfo) {
+      // Set user token
+      handlePusherInit();
+    }
+  }, [pusher]);
+
+  useEffect(() => {
+    if (womanInfo.activeRel) {
+      setRelations(true);
+      getCalendar(womanInfo.activeRel.relId);
+      getPregnancyPercent(womanInfo.activeRel.relId);
+    }
+  }, [womanInfo.activeRel]);
 
   useEffect(() => {
     if (setts.data && setts.data.is_successful) {
@@ -258,19 +235,23 @@ const HomeScreen = ({ navigation, route }) => {
   }, [setts]);
 
   useEffect(() => {
-    getRelations();
-  }, []);
+    if (params.refresh === 'true') {
+      setLoginWomanInfo();
+    }
+  }, [params]);
 
   useEffect(() => {
-    if (womanInfo.activeRel) {
-      setRelations(true);
-      getCalendar(womanInfo.activeRel.relId);
-      getPregnancyPercent(womanInfo.activeRel.relId);
+    if (loginWomanInfo.data && loginWomanInfo.data.is_successful) {
+      saveFullInfo(loginWomanInfo.data.data[0]);
+      AsyncStorage.setItem(
+        'fullInfo',
+        JSON.stringify(loginWomanInfo.data.data[0]),
+      );
     }
-  }, [womanInfo.activeRel]);
+  }, [loginWomanInfo]);
 
   return (
-    <Container justifyContent="flex-start">
+    <BackgroundView>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -280,126 +261,83 @@ const HomeScreen = ({ navigation, route }) => {
         navigation={navigation}
         style={{ marginTop: STATUS_BAR_HEIGHT + rh(2) }}
       />
-      <Divider color={COLORS.lightBlue} width="80%" />
-      {isLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
-          style={{ marginTop: 'auto', marginBottom: 'auto' }}
-        />
-      ) : (
-        <ScrollView
-          style={{ width: '100%' }}
-          contentContainerStyle={{ flexGrow: 1 }}>
-          {womanInfo.relations.length && womanInfo.activeRel ? (
-            <View style={{ flex: 1 }}>
-              <View style={styles.pregnancyContainer}>
-                <View style={{ margin: 5 }}>
-                  <Image
-                    source={require('../../assets/images/pa.png')}
-                    style={styles.sympIcon}
-                  />
-                  <Image
-                    source={require('../../assets/images/de.png')}
-                    style={styles.sympIcon}
-                  />
-                </View>
-                <View style={{ margin: 5 }}>
-                  <Image
-                    source={require('../../assets/images/de.png')}
-                    style={styles.sympIcon}
-                  />
-                  <Image
-                    source={require('../../assets/images/pa.png')}
-                    style={styles.sympIcon}
-                  />
-                </View>
 
-                <View>
-                  <Image
-                    source={
-                      isPeriodDay
-                        ? require('../../assets/images/600.png')
-                        : require('../../assets/images/500.png')
-                    }
-                    style={styles.pregPercentIcon}
-                  />
+      <View style={styles.content}>
+        <View style={{ alignItems: 'center' }}>
+          <View
+            style={{
+              marginTop: rh(1),
+              paddingHorizontal: rw(6),
+            }}>
+            <Text
+              marginBottom={rh(1.5)}
+              textAlign="right"
+              color={COLORS.textLight}>
+              {/* {adsSettings && adsSettings.value} */}
+              متن تست تبلیغات متن تست تبلیغات
+            </Text>
+          </View>
+        </View>
 
-                  {pregnancy ? (
-                    <View style={styles.pregnancyPercentText}>
-                      <Text bold medium color={COLORS.white}>
-                        {pregnancy}
-                      </Text>
-                      <Text color={COLORS.white}>احتمال بارداری</Text>
-                    </View>
-                  ) : (
-                    <View style={styles.pregnancyPercentText}>
-                      <ActivityIndicator size="large" color="white" />
-                    </View>
-                  )}
-                </View>
+        {!fetching && !womanInfo.relations.length ? <NoRelation /> : null}
+        {fetching ? (
+          <ActivityIndicator
+            size="large"
+            color={COLORS.primary}
+            style={{ marginTop: 'auto', marginBottom: 'auto' }}
+          />
+        ) : null}
+        {womanInfo.relations.length && !womanInfo.activeRel ? (
+          <View style={styles.noRel}>
+            <Text color={COLORS.red}>رابطه فعال خود را انتخاب کنید</Text>
+            <Picker
+              data={womanInfo.relations}
+              onItemSelect={onSelectSpouse}
+              reset={resetPicker}
+              placeholder="انتخاب رابطه"
+            />
+          </View>
+        ) : null}
+
+        {womanInfo.relations.length && womanInfo.activeRel && pregnancy ? (
+          <>
+            <View style={styles.pregnancyContainer}>
+              <Image
+                imageSource={require('../../assets/images/500.png')}
+                width={rw(90)}
+                height={rh(46)}
+              />
+              <View style={styles.pregnancyPercentText}>
+                <Text bold xl color={COLORS.white}>
+                  {pregnancy && numberConverter(pregnancy)}
+                </Text>
+                <Text large color={COLORS.white}>
+                  احتمال بارداری
+                </Text>
               </View>
-
-              {fetchCalendar === false ? (
-                <View>
-                  <CalendarList
-                    jalali
-                    markedDates={currentMarkedDates}
-                    hideExtraDays={true}
-                    disableMonthChange={false}
-                    firstDay={6}
-                    hideDayNames={false}
-                    showWeekNumbers={false}
-                    style={styles.calendar}
-                    theme={{
-                      ...CALENDAR_THEME,
-                      monthTextColor: isPeriodDay
-                        ? COLORS.rossoCorsa
-                        : COLORS.blue,
-                      textSectionTitleColor: isPeriodDay
-                        ? COLORS.rossoCorsa
-                        : COLORS.blue,
-                    }}
-                    markingType="simple"
-                    horizontal={true}
-                    pagingEnabled={false}
-                    onDayPress={() => {}}
-                  />
-                  <CalendarInfo />
-                </View>
-              ) : (
-                <ActivityIndicator
-                  size="large"
-                  color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
-                  style={{ marginTop: 'auto', marginBottom: 'auto' }}
-                />
-              )}
             </View>
-          ) : womanInfo.relations.length && womanInfo.fullInfo ? (
-            <View
-              style={{
-                width: '100%',
-                alignItems: 'center',
-                marginTop: 'auto',
-                marginBottom: 'auto',
-              }}>
-              <Picker
-                data={womanInfo.relations}
-                onItemSelect={onSelectSpouse}
-                reset={resetPicker}
-                placeholder={
-                  womanInfo.activeRel
-                    ? womanInfo.activeRel.label
-                    : 'انتخاب رابطه'
+            <View style={{ marginBottom: rh(4) }}>
+              <Image
+                imageSource={
+                  isPeriodDay
+                    ? require('../../assets/icons/home/period.png')
+                    : require('../../assets/icons/home/not-period.png')
                 }
-                listMode="SCROLLVIEW"
+                width="95px"
+                height="70px"
               />
             </View>
-          ) : (
-            <NoRelation navigation={navigation} />
-          )}
-        </ScrollView>
-      )}
+          </>
+        ) : null}
+
+        {womanInfo.relations.length && womanInfo.activeRel && !pregnancy ? (
+          <ActivityIndicator
+            size="large"
+            color={COLORS.primary}
+            style={{ marginTop: 'auto', marginBottom: 'auto' }}
+          />
+        ) : null}
+      </View>
 
       {snackbar.visible === true ? (
         <Snackbar
@@ -408,65 +346,52 @@ const HomeScreen = ({ navigation, route }) => {
           handleVisible={handleVisible}
         />
       ) : null}
-    </Container>
+    </BackgroundView>
   );
 };
 
 const styles = StyleSheet.create({
   content: {
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  pregnancyContainer: {
-    flexDirection: 'row',
-    width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: rh(1),
-    paddingHorizontal: rw(2),
+    flex: 1,
   },
-  pregPercentIcon: {
-    width: rw(40),
-    height: rh(22),
-  },
-  sympIcon: {
-    width: 70,
-    height: 70,
-    marginTop: rh(0.8),
+  pregnancyContainer: {
+    height: '55%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noRel: {
     width: '100%',
-    marginTop: 50,
+    marginTop: 'auto',
+    marginBottom: 'auto',
   },
-  selectedLabel: {
-    color: COLORS.white,
-    fontFamily: 'Vazir',
-    fontSize: 14,
-  },
-  btn: {
-    width: '70%',
-    height: 40,
-    marginTop: 10,
-    alignSelf: 'center',
-  },
-  pickerContainer: {
-    height: 40,
-    width: '60%',
-    marginTop: 20,
-    alignSelf: 'center',
+  pickerHeartContainer: {
+    width: rw(95),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    alignSelf: 'flex-end',
   },
   pregnancyPercentText: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: rh(3),
+    bottom: rh(5),
   },
-  calendar: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: 'gray',
+  selectedDate: {
+    fontFamily: 'Qs_Iranyekan_bold',
+    fontSize: 12,
+    color: 'white',
+    textAlign: 'center',
+  },
+  unselectedDate: {
+    fontFamily: 'Qs_Iranyekan_bold',
+    fontSize: 12,
+    textAlign: 'center',
+    color: COLORS.textLight,
   },
 });
 

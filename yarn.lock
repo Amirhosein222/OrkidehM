@@ -7254,11 +7254,6 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pushe-react-native@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/pushe-react-native/-/pushe-react-native-2.5.0.tgz#d5bc119bc1d2626d5d8d380b3e57b2c03b76066d"
-  integrity sha512-ON51i5QExLzUZoJLG9cbWzq1Nr/A841TQNBEfcxsGG5ai96UF9hYXgVLE0OXycquAXrWxwe1oW0O++I2hgqU5g==
-
 qs@^6.1.0:
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
@@ -7583,6 +7578,11 @@ react-native-picker@^4.3.7:
   version "4.3.7"
   resolved "https://registry.yarnpkg.com/react-native-picker/-/react-native-picker-4.3.7.tgz#9842e8c62ff0d8b676e9514d9f9172413c0518a8"
   integrity sha1-mELoxi/w2LZ26VFNn5FyQTwFGKg=
+
+react-native-pusher-push-notifications@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-pusher-push-notifications/-/react-native-pusher-push-notifications-2.5.2.tgz#010d61fcdfaf5042fe84d73b131a2d9a80efdf92"
+  integrity sha512-yMC0fysxHjZuhEhPmWzpiGowDqjmK+CHhpEeIIvCtpf3ClT3G+fTfLPFLuHV8/eYwvvsN+d0OH6D+SWr/BOwzg==
 
 react-native-read-more-text@^1.1.2:
   version "1.1.2"

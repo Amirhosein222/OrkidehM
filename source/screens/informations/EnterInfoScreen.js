@@ -1,17 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import { Image, StatusBar, StyleSheet } from 'react-native';
+import { View, Image, StatusBar, StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { Container, Snackbar } from '../../components/common';
-import { EnterName, SetPassword } from '../../components/informations';
+import { BackgroundView, Snackbar } from '../../components/common';
+import { PersonalInfo } from '../../components/informations';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
-import { rh, rw } from '../../configs';
+import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+
+import pinfoBg from '../../assets/vectors/register/pinfo.png';
 
 const EnterInfoScreen = ({ navigation, route }) => {
-  const { registerStage, handleRegisterStage, settings } = useContext(
-    WomanInfoContext,
-  );
+  const { registerStage, handleRegisterStage } = useContext(WomanInfoContext);
   const params = route.params;
   const [informations, setInformations] = useState({});
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
@@ -42,60 +43,52 @@ const EnterInfoScreen = ({ navigation, route }) => {
     });
   };
   return (
-    <Container>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-      <Image
-        source={{
-          uri:
-            settings && registerStage === 0
-              ? settings.app_image_field_username.value
-              : registerStage === 1
-              ? settings.app_image_field_password.value
-              : registerStage === 2
-              ? settings.app_image_last_period_date.value
-              : registerStage === 3
-              ? settings.app_image_last_period_length.value
-              : settings.app_image_length_between_periods.value,
-        }}
-        style={{ ...styles.image, backgroundColor: 'rgba(200,200,200, 0.6)' }}
-        resizeMode="stretch"
-      />
+    <KeyboardAwareScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <BackgroundView>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={styles.content}>
+          <Image source={pinfoBg} style={styles.image} resizeMode="stretch" />
 
-      {registerStage === 0 ? (
-        <EnterName
-          goToNextStage={goToNextStage}
-          setNameAndPicAndBirth={handleInformations}
-          editProfile={params.editProfile}
-          editName={params.name}
-          editPass={params.pass}
-          navigation={navigation}
-        />
-      ) : (
-        <SetPassword
-          nameAndPic={informations}
-          goToNextStage={goToNextStage}
-          navigation={navigation}
-        />
-      )}
-      {snackbar.visible === true ? (
-        <Snackbar
-          message={snackbar.msg}
-          type={snackbar.type}
-          handleVisible={handleVisible}
-        />
-      ) : null}
-    </Container>
+          {registerStage === 0 && (
+            <PersonalInfo
+              goToNextStage={goToNextStage}
+              setNameAndPicAndBirth={handleInformations}
+              editProfile={params.editProfile}
+              editName={params.name}
+              editPass={params.pass}
+              navigation={navigation}
+            />
+          )}
+
+          {snackbar.visible === true ? (
+            <Snackbar
+              message={snackbar.msg}
+              type={snackbar.type}
+              handleVisible={handleVisible}
+            />
+          ) : null}
+        </View>
+      </BackgroundView>
+    </KeyboardAwareScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   image: {
-    width: rw(100),
-    height: rh(33),
+    width: 200,
+    height: 200,
+    marginTop: rh(8),
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: STATUS_BAR_HEIGHT,
+    backgroundColor: 'transparent',
   },
 });
 

@@ -10,9 +10,11 @@ let saveActiveRel;
 const WomanInfoProvider = function ({ children }) {
   const [rels, setRels] = useState([]);
   const [fullInfo, setFullInfo] = useState(null);
+  const [periodInfo, setPeriodInfo] = useState(null);
   const [activeRel, setActiveRel] = useState(null);
   const [settings, setSettings] = useState(null);
   const [registerStage, setRegisterStage] = useState(0);
+  const [userCalendar, setUserCalendar] = useState(null);
   const [userPeriodDays, setUserPeriodDays] = useState(null);
   const [isPeriodDay, setIsPeriodDay] = useState(false);
 
@@ -36,6 +38,10 @@ const WomanInfoProvider = function ({ children }) {
     setRegisterStage(stage);
   };
 
+  const savePeriodInfo = (info) => {
+    setPeriodInfo(info);
+  };
+
   const handleUserPeriodDays = (pDays) => {
     setUserPeriodDays(pDays);
     const today = moment().locale('en').format('YYYY-MM-DD');
@@ -43,6 +49,10 @@ const WomanInfoProvider = function ({ children }) {
       (d) => moment(d.date, 'X').locale('en').format('YYYY-MM-DD') === today,
     );
     setIsPeriodDay(result ? true : false);
+  };
+
+  const handleUserCalendar = (calendar) => {
+    setUserCalendar(calendar);
   };
 
   return (
@@ -59,6 +69,10 @@ const WomanInfoProvider = function ({ children }) {
         handleUserPeriodDays,
         userPeriodDays,
         isPeriodDay,
+        periodInfo,
+        savePeriodInfo,
+        userCalendar,
+        handleUserCalendar,
       }}>
       {children}
     </WomanInfoContext.Provider>

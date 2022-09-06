@@ -1,12 +1,21 @@
+/* eslint-disable no-sparse-arrays */
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Text } from '../../components/common';
+
+import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS } from '../../configs';
 
-const VerticalBar = ({ data = 10, text = true, color = COLORS.lightBlue }) => {
+const VerticalBar = ({
+  data,
+  label,
+  text = true,
+  color = COLORS.lightPink,
+}) => {
+  const isPeriodDay = useIsPeriodDay();
   return (
     <View style={[styles.barContainer, { margin: text === false ? 3 : 10 }]}>
       <View
@@ -15,14 +24,14 @@ const VerticalBar = ({ data = 10, text = true, color = COLORS.lightBlue }) => {
           ,
           {
             height: Number(data) * 2,
-            backgroundColor: color,
+            backgroundColor: isPeriodDay ? COLORS.rossoCorsa : color,
             margin: text === false ? 0 : 10,
           },
         ]}
       />
       {text ? (
-        <Text color={COLORS.dark} bold>
-          پریود
+        <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary} small>
+          {label}
         </Text>
       ) : null}
     </View>
@@ -33,7 +42,7 @@ const styles = StyleSheet.create({
   vBar: {
     height: 50,
     width: 8,
-    backgroundColor: COLORS.lightBlue,
+    backgroundColor: COLORS.lightPink,
     borderRadius: 5,
     margin: 10,
   },
@@ -43,10 +52,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   points: {
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.primary,
   },
   assists: {
-    backgroundColor: COLORS.lightBlue,
+    backgroundColor: COLORS.lightPink,
   },
 });
 

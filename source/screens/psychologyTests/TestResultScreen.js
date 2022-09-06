@@ -11,7 +11,6 @@ import {
   Divider,
   Snackbar,
   Header,
-  TabBar,
 } from '../../components/common';
 import { COLORS, STATUS_BAR_HEIGHT } from '../../configs';
 
@@ -24,7 +23,7 @@ const TestResultScreen = ({ navigation, route }) => {
   const getResults = async function () {
     const loginClient = await getLoginClient();
     loginClient
-      .get(`test/result?test_id=${params.testId}&gender=man`)
+      .get(`test/result?test_id=${params.testId}&gender=woman`)
       .then((response) => {
         setIsLoading(false);
         if (response.data.is_successful) {
@@ -51,7 +50,7 @@ const TestResultScreen = ({ navigation, route }) => {
   if (isLoading) {
     return (
       <Container>
-        <ActivityIndicator size="large" color={COLORS.blue} />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </Container>
     );
   } else {
@@ -76,10 +75,14 @@ const TestResultScreen = ({ navigation, route }) => {
           <Text medium bold>
             نتیجه تست شماره 1
           </Text>
-          <Divider color={COLORS.blue} width="85%" style={{ marginTop: 20 }} />
+          <Divider
+            color={COLORS.primary}
+            width="85%"
+            style={{ marginTop: 20 }}
+          />
 
           <RowContainer>
-            <Text xl bold color={COLORS.blue}>
+            <Text xl bold color={COLORS.primary}>
               {results.total}
             </Text>
             <Text margin="10" medium bold>
@@ -87,7 +90,11 @@ const TestResultScreen = ({ navigation, route }) => {
             </Text>
           </RowContainer>
 
-          <Divider color={COLORS.blue} width="85%" style={{ marginTop: 20 }} />
+          <Divider
+            color={COLORS.primary}
+            width="85%"
+            style={{ marginTop: 20 }}
+          />
 
           {results.description ? (
             <View>
@@ -101,7 +108,7 @@ const TestResultScreen = ({ navigation, route }) => {
             </View>
           ) : null}
 
-          {/* <Divider color={COLORS.blue} width="85%" style={{ marginTop: 20 }} /> */}
+          {/* <Divider color={COLORS.primary} width="85%" style={{ marginTop: 20 }} /> */}
           {/* <RowContainer>
             <Text margin="10" medium>
               091233345678
@@ -119,7 +126,6 @@ const TestResultScreen = ({ navigation, route }) => {
           </RowContainer> */}
         </View>
 
-        <TabBar seperate={true} navigation={navigation} />
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}

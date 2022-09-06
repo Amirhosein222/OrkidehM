@@ -3,9 +3,15 @@ import React, { useRef, useEffect } from 'react';
 import { Animated, View, StyleSheet } from 'react-native';
 
 import { Text } from './index';
-import { COLORS } from '../../configs';
+import { COLORS, rh, rw } from '../../configs';
 
-const Snackbar = ({ message, type = 'error', handleVisible }) => {
+const Snackbar = ({
+  message,
+  type = 'error',
+  handleVisible,
+  delay = 1500,
+  style = {},
+}) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
   const styles = StyleSheet.create({
@@ -24,7 +30,7 @@ const Snackbar = ({ message, type = 'error', handleVisible }) => {
         duration: 500,
         useNativeDriver: true,
       }),
-      Animated.delay(1500),
+      Animated.delay(delay),
       Animated.timing(opacity, {
         toValue: 0,
         duration: 500,
@@ -39,6 +45,7 @@ const Snackbar = ({ message, type = 'error', handleVisible }) => {
     <View style={styles.container}>
       <Animated.View
         style={{
+          justifyContent: 'center',
           opacity: opacity,
           transform: [
             {
@@ -48,11 +55,14 @@ const Snackbar = ({ message, type = 'error', handleVisible }) => {
               }),
             },
           ],
+          width: rw(80),
+          height: rh(8),
+          alignSelf: 'center',
           margin: 10,
           marginBottom: 5,
-          backgroundColor: type === 'success' ? COLORS.green : COLORS.red,
+          backgroundColor: type === 'success' ? COLORS.success : COLORS.error,
           padding: 10,
-          borderRadius: 4,
+          borderRadius: 35,
           shadowColor: 'black',
           shadowOffset: {
             width: 0,
@@ -62,6 +72,7 @@ const Snackbar = ({ message, type = 'error', handleVisible }) => {
           shadowRadius: 5,
           elevation: 6,
           alignItems: 'center',
+          ...style,
         }}>
         <Text color={COLORS.white}>{message}</Text>
       </Animated.View>

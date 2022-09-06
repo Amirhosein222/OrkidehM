@@ -9,11 +9,11 @@ import { COLORS } from '../../configs';
 
 const ChartTwo = ({ chartData, route }) => {
   const RenderBars = function (item) {
-    return <VerticalBar data={item.item} />;
+    return <VerticalBar data={item.item.data} label={item.item.label} />;
   };
   return (
     <View style={{ height: 200, alignItems: 'center' }}>
-      <FlatList data={chartData.data} horizontal renderItem={RenderBars} />
+      <FlatList data={chartData} horizontal renderItem={RenderBars} />
     </View>
   );
 };

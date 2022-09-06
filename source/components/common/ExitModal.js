@@ -6,14 +6,11 @@ import { Button } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {
-  WomanInfoContext,
-  saveWomanRelations,
-  saveActiveRel,
-} from '../../libs/context/womanInfoContext';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 import { Text } from './index';
 
+import { initPusher } from '../../libs/helpers';
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS } from '../../configs';
 
@@ -31,13 +28,14 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
     // saveWomanRelations([]);
     // saveFullInfo([]);
     // saveActiveRel(null);
-
+    initPusher('', '', true);
+    await AsyncStorage.removeItem('pusherUid');
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
           {
-            name: 'Login',
+            name: 'Register',
           },
         ],
       }),
@@ -68,14 +66,14 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 
         <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => closeModal()}>
             <Text color="white">نه</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => onLogOut()}>
