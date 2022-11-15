@@ -15,21 +15,17 @@ import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS } from '../../configs';
 
 const ExitModal = ({ visible, closeModal, navigation }) => {
-  const { saveFullInfo } = useContext(WomanInfoContext);
+  const { savePeriodInfo } = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
 
   const onLogOut = async function () {
-    await AsyncStorage.setItem('logedOut', 'true');
-    // AsyncStorage.removeItem('periodStart');
-    // AsyncStorage.removeItem('fullInfo');
-    // AsyncStorage.removeItem('rels');
-    // AsyncStorage.removeItem('fcmTokenSent');
-
-    // saveWomanRelations([]);
-    // saveFullInfo([]);
-    // saveActiveRel(null);
+    savePeriodInfo(null);
     initPusher('', '', true);
     await AsyncStorage.removeItem('pusherUid');
+    await AsyncStorage.removeItem('isPassActive');
+    await AsyncStorage.removeItem('isFingerActive');
+    await AsyncStorage.removeItem('mobile');
+    await AsyncStorage.removeItem('userToken');
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -53,7 +49,7 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
       animationInTiming={0}
       onBackdropPress={() => closeModal()}
       animationIn="zoomIn"
-      animationOut="zoomOut"
+      // animationOut="zoomOut"
       style={styles.view}>
       <View
         style={{
@@ -66,14 +62,14 @@ const ExitModal = ({ visible, closeModal, navigation }) => {
 
         <View style={{ flexDirection: 'row', marginTop: 10 }}>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => closeModal()}>
             <Text color="white">نه</Text>
           </Button>
           <Button
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.primary}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             mode="contained"
             style={styles.btn}
             onPress={() => onLogOut()}>
@@ -97,7 +93,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.primary,
     borderRadius: 20,
     height: '30%',
     justifyContent: 'center',

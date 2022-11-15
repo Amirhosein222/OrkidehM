@@ -40,7 +40,7 @@ const getManClient = async () => {
 
 // Intercept all responses
 manApi.interceptors.response.use(
-  async (response) => {
+  async response => {
     if (response.status === 401) {
       try {
         const value = await AsyncStorage.getItem('userToken');
@@ -55,7 +55,7 @@ manApi.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  error => {
     console.error(error);
     return Promise.reject(error);
   },

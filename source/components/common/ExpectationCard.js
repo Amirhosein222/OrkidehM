@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import { Text } from '../../components/common';
-import { baseUrl, COLORS, rh, rw } from '../../configs';
+import { baseUrl, COLORS, rw, rh } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
 
 const ExpectationCard = ({ exp, onRight = false }) => {
@@ -39,7 +39,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
     },
     title: {
       fontSize: 18,
-      color: COLORS.blue,
+      color: COLORS.primary,
     },
   });
 
@@ -48,7 +48,9 @@ const ExpectationCard = ({ exp, onRight = false }) => {
       <TouchableOpacity style={styles.container}>
         {/* <View style={styles.overlay} /> */}
         <View style={styles.titleContainer}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue} medium>
+          <Text
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            medium>
             {exp.expectation.title}
           </Text>
           <Text small>{exp.expectation.title}</Text>
@@ -82,7 +84,7 @@ const ExpectationCard = ({ exp, onRight = false }) => {
 
         <View style={styles.titleContainer}>
           <Text
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             medium
             textAlign="right"
             alignSelf="flex-end">

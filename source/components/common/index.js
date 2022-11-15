@@ -11,18 +11,20 @@ import Switch from './Switch';
 import ImageText from './ImageText';
 import Header from './Header';
 import TabBar from './TabBar';
-import CommentModal from './CommentModal';
 import ExitModal from './ExitModal';
-import UpdateModal from './UpdateRelModal';
 import TopTabBar from './TopTabBar';
 import Snackbar from './Snackbar';
 import NoRelation from './NoRelation';
+import PeriodDayTabBar from './PeriodDayTabBar';
 import Picker from './Picker/Picker';
 import InputRow from './inputRow/InputRow';
 import Button from './button';
 import { DeleteModal, ReportModal } from './Modals';
 import ScreenHeader from './screenHeader';
 import BackgroundView from './backgroundView/BackgroundView';
+import HDatePicker from './HDatePicker';
+import ReadMore from './ReadMore';
+import ShowLovePopup from './showLovePopup';
 
 export {
   Text,
@@ -38,12 +40,11 @@ export {
   ImageText,
   Header,
   TabBar,
-  CommentModal,
   ExitModal,
   TopTabBar,
-  UpdateModal,
   Snackbar,
   NoRelation,
+  PeriodDayTabBar,
   Picker,
   InputRow,
   Button,
@@ -51,4 +52,7 @@ export {
   ReportModal,
   ScreenHeader,
   BackgroundView,
+  HDatePicker,
+  ReadMore,
+  ShowLovePopup,
 };

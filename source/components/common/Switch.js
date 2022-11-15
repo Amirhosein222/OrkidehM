@@ -1,18 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Toggle from 'react-native-toggle-element';
 
 import Text from './Text';
-import { COLORS } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
+import { COLORS } from '../../configs';
 
 const Switch = ({ active, changeStatus }) => {
   const isPeriodDay = useIsPeriodDay();
 
   return (
     <View style={styles.switchContainer}>
-      <Text small color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}>
+      <Text small color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
         فعال
       </Text>
       <Toggle
@@ -26,15 +26,15 @@ const Switch = ({ active, changeStatus }) => {
           activeBackgroundColor: '#DDCECE',
           inActiveBackgroundColor: isPeriodDay
             ? COLORS.lightRed
-            : COLORS.lightBlue,
+            : COLORS.lightPink,
           width: 70,
           height: 35,
         }}
         thumbButton={{
           activeBackgroundColor: COLORS.grey,
           inActiveBackgroundColor: isPeriodDay
-            ? COLORS.rossoCorsa
-            : COLORS.blue,
+            ? COLORS.fireEngineRed
+            : COLORS.primary,
           width: 35,
           height: 35,
         }}
@@ -46,7 +46,6 @@ const Switch = ({ active, changeStatus }) => {
 
 const styles = StyleSheet.create({
   switchContainer: {
-    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: '100%',

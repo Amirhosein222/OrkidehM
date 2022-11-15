@@ -6,8 +6,9 @@ import styled from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { COLORS } from '../../configs';
 import { useIsPeriodDay } from '../../libs/hooks';
+
+import { COLORS } from '../../configs';
 
 const IconWithBg = ({
   width,
@@ -44,13 +45,12 @@ const IconWithBg = ({
     align-self: ${alignSelf ? alignSelf : 'center'};
     elevation: ${elevation ? elevation : '5'};
   `;
-  const isPeriodDay = useIsPeriodDay();
   return (
     <IconContainer>
       {loading ? (
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+          color={useIsPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
         />
       ) : icon === 'user-alt' ? (
         <View>

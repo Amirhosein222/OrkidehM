@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { COLORS, rh, rw } from '../../../configs';
 
@@ -37,12 +38,29 @@ const Picker = ({
       setValue={setValue}
       setItems={setItems}
       listMode={listMode}
-      onChangeValue={(val) => {
+      onChangeValue={val => {
         onItemSelect(val);
       }}
       labelStyle={styles.labelStyle}
-      listItemLabelStyle={{ fontFamily: 'Qs_Iranyekan_bold', color: 'black' }}
-      arrowColor={COLORS.white}
+      listItemLabelStyle={{
+        fontFamily: 'IRANYekanMobileBold',
+        color: COLORS.textDark,
+        fontSize: 12,
+      }}
+      ArrowDownIconComponent={() => (
+        <MaterialIcons
+          name="arrow-drop-down"
+          size={28}
+          color={COLORS.textLight}
+        />
+      )}
+      ArrowUpIconComponent={() => (
+        <MaterialIcons
+          name="arrow-drop-up"
+          size={28}
+          color={COLORS.textLight}
+        />
+      )}
       containerStyle={styles.pickerContainer}
       style={{
         backgroundColor: COLORS.inputTabBarBg,
@@ -58,7 +76,7 @@ const Picker = ({
         backgroundColor: COLORS.mainBg,
       }}
       placeholderStyle={{
-        fontFamily: 'Qs_Iranyekan_bold',
+        fontFamily: 'IRANYekanMobileBold',
         color: COLORS.textLight,
       }}
       placeholder={placeholder}
@@ -74,7 +92,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   labelStyle: {
-    fontFamily: 'Qs_Iranyekan_bold',
+    fontFamily: 'IRANYekanMobileBold',
     color: COLORS.textLight,
   },
 });

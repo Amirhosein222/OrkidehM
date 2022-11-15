@@ -2,19 +2,21 @@
 /* eslint-disable prettier/prettier */
 import React, { useContext } from 'react';
 import { Image, StyleSheet, View, Pressable } from 'react-native';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../../../../components/common';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
-import { baseUrl, COLORS, rh, rw } from '../../../../configs';
-import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
+import { COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
+import { useIsPeriodDay } from '../../../../libs/hooks';
 
 import manIcon from '../../../../assets/vectors/profile/man-1.png';
+import NextPage from '../../../../assets/icons/drawerSettings/nextPage.svg';
+// import EnabledEdit from '../../../../assets/btns/enabled-edit.s'
 
 const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
+  const isPeriodDay = useIsPeriodDay();
+
   const womanInfo = useContext(WomanInfoContext);
   const navigation = useNavigation();
 
@@ -29,23 +31,19 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
           <Pressable
             onPress={() => navigation.navigate('Profile')}
             style={{ marginTop: rh(0.5), marginRight: 'auto' }}>
-            <Image
-              style={{ width: 25, height: 25 }}
-              source={require('../../../../assets/icons/drawerSettings/next-page.png')}
-            />
+            <NextPage style={ICON_SIZE} />
           </Pressable>
           <View style={styles.nameContainer}>
             <Text
-              medium
+              bold
+              size={14}
               color={COLORS.textDark}
               textAlign="right"
               alignSelf="flex-end">
               {womanInfo.fullInfo.display_name}
             </Text>
-            <Text color={COLORS.textLight} alignSelf="flex-end">
-              {numberConverter(
-                convertToFullDate(womanInfo.fullInfo.birth_date),
-              )}
+            <Text bold color={COLORS.textLight} alignSelf="flex-end">
+              {womanInfo.fullInfo.mobile}
             </Text>
           </View>
         </>
@@ -54,20 +52,31 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
       <View
         style={{
           ...styles.avatarBorderdContainer,
-          width: 110,
-          height: 110,
+          width: profile ? 140 : 100,
+          height: profile ? 140 : 100,
+          borderRadius: profile ? 140 : 100,
         }}>
         {picture ? (
           <Image
             source={{ uri: picture }}
-            style={{ width: 100, height: 100, borderRadius: 70 }}
+            style={{
+              width: profile ? 130 : 90,
+              height: profile ? 130 : 90,
+              borderRadius: 130,
+            }}
             resizeMode="contain"
           />
         ) : (
-          <View style={styles.avatarBorderdContainer}>
+          <View
+            style={{
+              ...styles.avatarBorderdContainer,
+              width: profile ? 130 : 90,
+              height: profile ? 130 : 90,
+              borderRadius: profile ? 130 : 90,
+            }}>
             <Image
               source={manIcon}
-              style={{ width: 90, height: 90, borderRadius: 70 }}
+              style={{ width: profile ? 110 : 70, height: profile ? 110 : 70 }}
               resizeMode="contain"
             />
           </View>
@@ -75,7 +84,12 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
 
         {profile && (
           <Pressable
-            style={styles.plusIconContainer}
+            style={{
+              ...styles.plusIconContainer,
+              backgroundColor: isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
+            }}
             hitSlop={7}
             onPress={openPicker}>
             <Icon name="plus" size={20} color={COLORS.white} />
@@ -90,7 +104,6 @@ const styles = StyleSheet.create({
   avatarContainer: {
     flexDirection: 'row',
     width: rw(83),
-    height: rh(15.5),
     overflow: 'hidden',
     alignSelf: 'center',
     justifyContent: 'flex-end',
@@ -101,24 +114,40 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.inputTabBarBg,
     width: 100,
     height: 100,
-    borderRadius: 55,
+    borderRadius: 100 / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
+    borderWidth: 2.5,
     borderColor: 'white',
   },
+  avatarDefaultBorderd: {
+    backgroundColor: COLORS.inputTabBarBg,
+    width: 90,
+    height: 90,
+    borderRadius: 90 / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'white',
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+  },
+  avatarDefault: { width: 70, height: 70 },
   nameContainer: {
     paddingRight: rw(3),
   },
   plusIconContainer: {
-    width: rw(9.5),
-    height: rh(4.5),
+    width: rw(10.1),
+    height: rh(5),
     borderRadius: 30,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     ...StyleSheet.absoluteFillObject,
-    top: rh(9),
+    top: rh(11.5),
   },
 });
 

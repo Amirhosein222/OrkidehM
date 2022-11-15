@@ -1,25 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useContext, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Linking,
-  Image,
-} from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, ScrollView, Pressable, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NoRelation, Picker } from '../../components/common';
 
-import { useIsPeriodDay, useApi } from '../../libs/hooks';
+import { useIsPeriodDay } from '../../libs/hooks';
 import getLoginClient from '../../libs/api/loginClientApi';
-import { buyGoldenAccount } from '../../libs/apiCalls';
 import {
   WomanInfoContext,
   saveActiveRel,
@@ -35,18 +22,23 @@ import {
 } from '../../configs';
 import { convertToFullDate, numberConverter } from '../../libs/helpers';
 
-import CalendarModal from '../calendar/CalendarModal';
+import { CalendarModal } from '../../screens/calendar/components';
+
+import SympMenu from '../../assets/icons/drawerSettings/symptoms-menu.svg';
+import MemMenu from '../../assets/icons/drawerSettings/memories-menu.svg';
+import SweetHeartMenu from '../../assets/icons/drawerSettings/sweetheart-menu.svg';
+import PsycheTestMenu from '../../assets/icons/drawerSettings/psychologicalTest-menu.svg';
+import ContactAnExpertMenu from '../../assets/icons/drawerSettings/contactAnExpert-menu.svg';
+import SettingMenu from '../../assets/icons/drawerSettings/setting-menu.svg';
 
 const DrawerUi = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
 
   const [showCalendarModal, setShowCalendarModal] = useState(false);
-  const [buyAccount, setBuyAccount] = useApi(() => buyGoldenAccount());
   const [resetPicker, setResetPicker] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-  const emergency = 115;
 
   const setActiveSpouse = async function (value) {
     if (typeof value === 'object') {
@@ -57,7 +49,7 @@ const DrawerUi = ({ navigation }) => {
     const formData = new FormData();
     formData.append('relation_id', value);
     formData.append('gender', 'man');
-    loginClient.post('active/relation', formData).then((response) => {
+    loginClient.post('active/relation', formData).then(response => {
       if (response.data.is_successful) {
         AsyncStorage.setItem(
           'lastActiveRelId',
@@ -96,7 +88,12 @@ const DrawerUi = ({ navigation }) => {
     });
   };
 
-  const onSelectSpouse = (spouse) => {
+  const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+      });
+    }
     setActiveSpouse(spouse);
   };
 
@@ -118,25 +115,25 @@ const DrawerUi = ({ navigation }) => {
             <View style={styles.avatarContainer}>
               <View style={styles.nameContainer}>
                 <Text
-                  medium
+                  size={13}
+                  bold
                   color={COLORS.textDark}
                   textAlign="right"
                   alignSelf="flex-end">
-                  {womanInfo.fullInfo.display_name}
+                  {womanInfo.fullInfo.name}
                 </Text>
-                <Text color={COLORS.textLight} alignSelf="flex-end">
+                <Text
+                  size={11}
+                  bold
+                  color={COLORS.textLight}
+                  alignSelf="flex-end">
                   {numberConverter(
                     convertToFullDate(womanInfo.fullInfo.birth_date),
                   )}
                 </Text>
               </View>
               {womanInfo.fullInfo.image ? (
-                <View
-                  style={{
-                    ...styles.avatarBorderdContainer,
-                    width: 110,
-                    height: 110,
-                  }}>
+                <View style={styles.avatarBorderdContainer}>
                   <Image
                     source={{ uri: baseUrl + womanInfo.fullInfo.image }}
                     style={styles.avatar}
@@ -144,16 +141,11 @@ const DrawerUi = ({ navigation }) => {
                   />
                 </View>
               ) : (
-                <View
-                  style={{
-                    ...styles.avatarBorderdContainer,
-                    width: 110,
-                    height: 110,
-                  }}>
-                  <View style={styles.avatarBorderdContainer}>
+                <View style={styles.avatarBorderdContainer}>
+                  <View style={styles.avatarDefaultBorderd}>
                     <Image
-                      source={require('../../assets/vectors/profile/man-1.png')}
-                      style={{ ...styles.avatar, width: 90, height: 90 }}
+                      source={require('../../assets/vectors/profile/woman-1.png')}
+                      style={styles.avatarDefault}
                       resizeMode="contain"
                     />
                   </View>
@@ -164,25 +156,25 @@ const DrawerUi = ({ navigation }) => {
               <View style={styles.avatarContainer}>
                 <View style={styles.nameContainer}>
                   <Text
-                    medium
+                    size={13}
+                    bold
                     color={COLORS.textDark}
                     textAlign="right"
                     alignSelf="flex-end">
                     {womanInfo.activeRel.label}
                   </Text>
-                  <Text color={COLORS.textLight} alignSelf="flex-end">
+                  <Text
+                    size={11}
+                    bold
+                    color={COLORS.textLight}
+                    alignSelf="flex-end">
                     {numberConverter(
                       convertToFullDate(womanInfo.activeRel.birthday),
                     )}
                   </Text>
                 </View>
                 {womanInfo.activeRel.image ? (
-                  <View
-                    style={{
-                      ...styles.avatarBorderdContainer,
-                      width: 110,
-                      height: 110,
-                    }}>
+                  <View style={styles.avatarBorderdContainer}>
                     <Image
                       source={{ uri: baseUrl + womanInfo.activeRel.image }}
                       style={styles.avatar}
@@ -193,13 +185,11 @@ const DrawerUi = ({ navigation }) => {
                   <View
                     style={{
                       ...styles.avatarBorderdContainer,
-                      width: 110,
-                      height: 110,
                     }}>
-                    <View style={styles.avatarBorderdContainer}>
+                    <View style={styles.avatarDefaultBorderd}>
                       <Image
-                        source={require('../../assets/vectors/profile/woman-1.png')}
-                        style={{ ...styles.avatar, width: 90, height: 90 }}
+                        source={require('../../assets/vectors/profile/man-1.png')}
+                        style={styles.avatarDefault}
                         resizeMode="contain"
                       />
                     </View>
@@ -225,169 +215,89 @@ const DrawerUi = ({ navigation }) => {
               containerStyle={{ marginBottom: rh(2) }}
             />
           )}
-
-          {/* {womanInfo.fullInfo.account_type === '' && (
-            <Pressable
-              onPress={onBuyAccount}
-              style={[
-                styles.itemContainer,
-                { backgroundColor: '#F8CD00', marginTop: rh(4), height: 50 },
-              ]}>
-              {buyAccount.isFetching ? (
-                <ActivityIndicator
-                  size="small"
-                  color="white"
-                  style={{ marginRight: rw(5) }}
-                />
-              ) : (
-                <Text marginRight="15" color={COLORS.white}>
-                  استفاده کامل از امکانات
-                </Text>
-              )}
-              <AntDesign name="staro" color={COLORS.white} size={20} />
-            </Pressable>
-          )} */}
-
-          {/* <Pressable
-            onPress={() => Linking.openURL(`tel:${emergency}`)}
-            style={styles.itemContainer}>
-            <Text marginRight="15">تماس اضطراری</Text>
-            <MaterialCommunityIcons
-              name="phone-plus"
-              color={COLORS.textDark}
-              size={30}
-            />
-          </Pressable> */}
         </>
       )}
       <View style={styles.optionsContainer}>
-        {/* {womanInfo.relations.length ? (
-          <Pressable
-            onPress={() => navigate('Symptoms')}
-            style={{ ...styles.itemContainer, marginTop: rh(3) }}>
-            <Text marginRight="15">انتظارات همسر</Text>
-            <AntDesign name="heart" color={COLORS.textDark} size={22} />
-          </Pressable>
-        ) : null} */}
         {/* <Pressable
-        onPress={() => navigate('ContactSpouse')}
-        style={styles.itemContainer}>
-        <Text marginRight="15">روابط من</Text>
-        <MaterialCommunityIcons
-          name="human-male-female"
-          color={COLORS.textDark}
-          size={30}
-        />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('VerifyRelation')}
-        style={styles.itemContainer}>
-        <Text marginRight="15">تایید رابطه</Text>
-        <FontAwesome5 name="user-check" color={COLORS.textDark} size={22} />
-      </Pressable> */}
-        <Pressable
           onPress={() => setShowCalendarModal(true)}
-          style={{
-            ...styles.itemContainer,
-            marginLeft: rw(1),
-            marginTop: rh(4),
-          }}>
-          <Text marginRight="15">تقویم</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/calendar-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
-        </Pressable>
-        <Pressable
-          // onPress={() => navigate('PsychologyTests')}
           style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
-          <Text marginRight="15">علائم من</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/symptoms-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
+          <Text size={11} bold marginRight="15">
+            تقویم
+          </Text>
+          <CalendarIcon style={{ width: 25, height: 25 }} />
+        </Pressable> */}
+        <Pressable
+          onPress={() => navigation.navigate('PeriodTabs')}
+          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          <Text size={11} bold marginRight="15">
+            علائم من
+          </Text>
+          <SympMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
           onPress={() => navigate('MemoriesTab')}
           style={{ ...styles.itemContainer, marginLeft: rw(2) }}>
-          <Text marginRight="15">خاطرات من</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/memories-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
+          <Text size={11} bold marginRight="15">
+            خاطرات من
+          </Text>
+          <MemMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
           onPress={() => navigate('PeriodTabs')}
           style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
-          <Text marginRight="15">دلبر</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/sweetheart-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
+          <Text size={11} bold marginRight="15">
+            دلبر
+          </Text>
+          <SweetHeartMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
           onPress={() => navigate('PsychologyTests')}
           style={styles.itemContainer}>
-          <Text marginRight="15">تست های روانشناسی</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/psychologicalTest-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
+          <Text size={11} bold marginRight="15">
+            تست های روانشناسی
+          </Text>
+          <PsycheTestMenu style={{ width: 25, height: 25 }} />
         </Pressable>
-        <Pressable
-          onPress={() => navigate('ContactCounselor')}
+        {/* <Pressable
+          onPress={() => navigate('Charts')}
           style={styles.itemContainer}>
-          <Text marginRight="15"> تماس با کارشناس</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/ContactAnExpert-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
-        </Pressable>
+          <Text size={11} bold marginRight="15">
+            نمودار وضعیت من
+          </Text>
+          <ChartMenu style={{ width: 25, height: 25 }} />
+        </Pressable> */}
 
+        <Pressable
+          onPress={() => navigate('LearningBank')}
+          style={styles.itemContainer}>
+          <Text size={11} bold marginRight="15">
+            مجله
+          </Text>
+          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
+        </Pressable>
         <Divider
-          color={isPeriodDay ? COLORS.rossoCorsa : COLORS.textDark}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
           width="100%"
           style={{ marginVertical: rh(1.5) }}
+          borderWidth={1.5}
         />
         <Pressable
           onPress={() => navigate('Settings')}
           style={styles.itemContainer}>
-          <Text marginRight="15">تنظیمات</Text>
-          <Image
-            source={require('../../assets/icons/drawerSettings/setting-menu.png')}
-            style={{ width: 28, height: 28 }}
-          />
+          <Text size={11} bold marginRight="15">
+            تنظیمات
+          </Text>
+          <SettingMenu style={{ width: 25, height: 25 }} />
         </Pressable>
-        {/* <Pressable
-        onPress={() => navigate('AppGuide')}
-        style={styles.itemContainer}>
-        <Text marginRight="15">راهنما</Text>
-        <FontAwesome5 name="map-signs" color={COLORS.textDark} size={28} />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('AboutUs')}
-        style={styles.itemContainer}>
-        <Text marginRight="15">درباره اپلیکیشن</Text>
-        <MaterialCommunityIcons
-          name="google-circles-extended"
-          color={COLORS.textDark}
-          size={28}
-        />
-      </Pressable>
-      <Pressable
-        onPress={() => navigate('Developers')}
-        style={styles.itemContainer}>
-        <Text marginRight="15">سازندگان اپلیکیشن</Text>
-        <FontAwesome5 name="laptop-code" color={COLORS.textDark} size={28} />
-      </Pressable> */}
-        {/* <Pressable onPress={() => handleExitModal()} style={styles.itemContainer}>
-        <Text marginRight="15">خروج از حساب کاربری</Text>
-        <MaterialCommunityIcons
-          name="exit-to-app"
-          color={COLORS.textDark}
-          size={30}
-        />
-      </Pressable> */}
+        <Pressable
+          onPress={() => navigate('ContactCounselor')}
+          style={styles.itemContainer}>
+          <Text size={11} bold marginRight="15">
+            {' '}
+            ارتباط با کارشناس
+          </Text>
+          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
+        </Pressable>
         <ExitModal
           visible={showModal}
           navigation={navigation}
@@ -423,14 +333,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginVertical: rh(2),
+    marginVertical: rh(1),
+    marginRight: rw(4),
   },
   optionsContainer: {
     width: '100%',
     alignItems: 'center',
     backgroundColor: COLORS.mainBg,
     flex: 1,
-    paddingHorizontal: rw(8),
+    paddingHorizontal: rw(7),
+    marginTop: rh(2),
   },
   userRelationContainer: {
     width: '100%',
@@ -452,15 +364,22 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.inputTabBarBg,
     width: 100,
     height: 100,
-    borderRadius: 55,
+    borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
+    overflow: 'hidden',
   },
-  womanAvatarNameContainer: {
-    justifyContent: 'center',
+  avatarDefaultBorderd: {
+    backgroundColor: COLORS.inputTabBarBg,
+    width: 90,
+    height: 90,
+    borderRadius: 90 / 2,
     alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'white',
   },
   nameContainer: {
     paddingRight: rw(3),
@@ -468,8 +387,9 @@ const styles = StyleSheet.create({
   avatar: {
     width: 100,
     height: 100,
-    borderRadius: 90,
+    borderRadius: 100,
   },
+  avatarDefault: { width: 70, height: 70 },
 });
 
 export default DrawerUi;

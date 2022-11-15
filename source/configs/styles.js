@@ -18,6 +18,7 @@ export const PALETTE = {
   vividSkyBlue: '#48c7ef',
   outerSpaceCrayola: '#1B3133',
   ashGray: '#AFB8B6',
+  fireEngineRed: '#D22328',
 };
 
 const COLORS = {
@@ -33,6 +34,7 @@ const COLORS = {
   icon: PALETTE.blackShadowsDark,
   white: PALETTE.white,
   cardBg: PALETTE.white1,
+  fireEngineRed: PALETTE.fireEngineRed,
   darkYellow: '#FFCC00',
   red: '#FE024E',
   red1: '#FFC2D4',
@@ -40,7 +42,7 @@ const COLORS = {
   lightRed: '#fca09f',
   darkRed: '#D40707',
   orange: '#F9741B',
-  lightPink: 'rgba(254, 2, 148, 0.2)',
+  lightBlue: '#d7ebf7',
   lightWhite: 'rgba(220,220,220, 0.9)',
   grey: '#ACAFBC',
   lightGrey: 'rgba(240, 240, 240, 1)',
@@ -87,4 +89,17 @@ const CALENDAR_THEME = {
   textDayHeaderFontSize: 10,
 };
 
-export { SCROLL_VIEW_CONTAINER, COLORS, SNACKBAR_OPTIONS, CALENDAR_THEME };
+const ICON_SIZE = { width: 25, height: 25 };
+
+const TAB_BIG_ICON_SIZE = { width: 25, height: 25 };
+const TAB_SMALL_ICON_SIZE = { width: 25, height: 25 };
+
+export {
+  SCROLL_VIEW_CONTAINER,
+  COLORS,
+  SNACKBAR_OPTIONS,
+  CALENDAR_THEME,
+  ICON_SIZE,
+  TAB_BIG_ICON_SIZE,
+  TAB_SMALL_ICON_SIZE,
+};

@@ -1,28 +1,47 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { View, StyleSheet, Pressable, StatusBar } from 'react-native';
 
-import { Text, Header, BackgroundView } from '../../components/common';
+import {
+  Text,
+  Header,
+  BackgroundView,
+  Snackbar,
+  ShowLovePopup,
+} from '../../components/common';
 
 import { useIsPeriodDay } from '../../libs/hooks';
 import { COLORS, rh, rw, STATUS_BAR_HEIGHT } from '../../configs';
+import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const TopTabBar = ({ state, descriptors, navigation }) => {
+  const { settings } = useContext(WomanInfoContext);
   const isPeriodDay = useIsPeriodDay();
   const { routes, index } = state;
+  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [showLove, setShowLove] = useState(false);
+  const [adsSettings, setAdsSetting] = useState(
+    settings ? settings.app_text_need_support : null,
+  );
 
-  const handleTabColors = (focused) => {
+  const handleTabColors = focused => {
     if (isPeriodDay) {
-      return focused ? COLORS.rossoCorsa : COLORS.textLight;
+      return focused ? COLORS.fireEngineRed : COLORS.textLight;
     } else {
       return focused ? COLORS.primary : COLORS.textLight;
     }
   };
 
+  const handleVisible = () => {
+    setSnackbar({
+      visible: !snackbar.visible,
+    });
+  };
+
   return (
     <BackgroundView
       resizeMode="stretch"
-      style={{ width: rw(100), height: rh(22) }}>
+      style={{ width: rw(100), height: rh(22), zIndex: 1 }}>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -31,6 +50,9 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
       <Header
         navigation={navigation}
         style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        setShowLovePopup={setShowLove}
+        setSnackbar={setSnackbar}
+        ads={adsSettings && adsSettings.value}
       />
       <View style={styles.container}>
         {routes.map((route, index) => {
@@ -56,13 +78,27 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
               }}
               key={route.key}
               onPress={() => onPress()}>
-              <Text marginBottom="5" color={handleTabColors(focused)} bold>
+              <Text
+                size={11}
+                marginBottom="5"
+                color={handleTabColors(focused)}
+                black>
                 {options.tabBarLabel}
               </Text>
             </Pressable>
           );
         })}
       </View>
+      {snackbar.visible === true ? (
+        <Snackbar
+          message={snackbar.msg}
+          type={snackbar.type}
+          handleVisible={handleVisible}
+        />
+      ) : null}
+      {showLove ? (
+        <ShowLovePopup handleVisible={() => setShowLove(false)} />
+      ) : null}
     </BackgroundView>
   );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   Image,
   StyleSheet,
@@ -8,15 +8,14 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Text } from '../../../../components/common';
-import { baseUrl, COLORS, rh, rw } from '../../../../configs';
-import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
+import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
 
 import womanIcon from '../../../../assets/vectors/profile/woman-1.png';
+import Delete from '../../../../assets/icons/btns/delete.svg';
+import EnabledEdit from '../../../../assets/icons/btns/enabled-edit.svg';
 
 const RelItem = ({
   rel,
@@ -30,11 +29,10 @@ const RelItem = ({
     <View style={styles.avatarContainer}>
       <View style={{ alignSelf: 'flex-start' }}>
         <View style={styles.editDeleteContainer}>
-          <Pressable onPress={() => handleShowDeleteModal(rel.id)} hitSlop={7}>
-            <Image
-              source={require('../../../../assets/icons/btns/delete.png')}
-              style={{ width: 25, height: 25 }}
-            />
+          <Pressable
+            onPress={() => handleShowDeleteModal(rel.value)}
+            hitSlop={7}>
+            <Delete style={ICON_SIZE} />
           </Pressable>
           <Pressable
             hitSlop={7}
@@ -44,21 +42,18 @@ const RelItem = ({
                 handleUpdateRels: updateRels,
               })
             }>
-            <Image
-              source={require('../../../../assets/icons/btns/enabled-edit.png')}
-              style={{ width: 25, height: 25 }}
-            />
+            <EnabledEdit style={ICON_SIZE} />
           </Pressable>
         </View>
-        {!rel.is_verified && (
+        {!rel.is_verified && rel.applicant === 'woman' && (
           <Pressable
             disabled={isVerifying}
-            onPress={() => handleVerifyRel(rel.verification_code)}
+            onPress={() => handleVerifyRel(rel.verifyCode)}
             style={styles.verifyRel}>
             {isVerifying ? (
               <ActivityIndicator size="small" color={COLORS.borderLinkBtn} />
             ) : (
-              <Text small color={COLORS.borderLinkBtn} textAlign="right">
+              <Text size={10} color={COLORS.borderLinkBtn} textAlign="right">
                 تایید رابطه
               </Text>
             )}
@@ -68,18 +63,19 @@ const RelItem = ({
       <View style={styles.avatarNameContainer}>
         <View style={styles.nameContainer}>
           <Text
-            medium
+            size={14}
+            bold
             color={COLORS.textDark}
             textAlign="right"
             alignSelf="flex-end">
-            {rel.woman_name}
+            {rel.label}
           </Text>
-          <Text color={COLORS.textLight} alignSelf="flex-end">
-            {numberConverter(convertToFullDate(rel.woman.birth_date))}
+          <Text size={12} bold color={COLORS.textLight} alignSelf="flex-end">
+            {rel.mobile}
           </Text>
         </View>
 
-        {rel.woman_image ? (
+        {rel.image ? (
           <View
             style={{
               ...styles.avatarBorderdContainer,
@@ -87,7 +83,7 @@ const RelItem = ({
               height: 110,
             }}>
             <Image
-              source={{ uri: baseUrl + rel.woman_image }}
+              source={{ uri: baseUrl + rel.image }}
               style={{ width: 100, height: 100, borderRadius: 70 }}
               resizeMode="contain"
             />
@@ -137,6 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
+    overflow: 'hidden',
   },
   nameContainer: {
     marginRight: rw(2),

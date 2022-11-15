@@ -1,8 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import Modal from 'react-native-modal';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment-jalaali';
 
 import {
@@ -11,16 +10,26 @@ import {
   InputRow,
   Snackbar,
 } from '../../../../components/common';
-import { rw, rh, COLORS } from '../../../../configs';
+import { rw, rh, COLORS, ICON_SIZE } from '../../../../configs';
 import getLoginClient from '../../../../libs/api/loginClientApi';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showSnackbar } from '../../../../libs/helpers';
 
-const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
+import Close from '../../../../assets/icons/btns/close.svg';
+import EnableCheck from '../../../../assets/icons/btns/enabled-check.svg';
+import { useIsPeriodDay } from '../../../../libs/hooks';
+
+const EditInfoModal = ({
+  title,
+  visible,
+  closeModal,
+  displayName,
+  oldName,
+}) => {
+  const isPeriodDay = useIsPeriodDay();
+
   const { fullInfo, saveFullInfo } = useContext(WomanInfoContext);
-  const [name, setName] = useState(displayName ? displayName : '');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState();
+  const [username, setUsername] = useState();
   const [isUpdating, setIsUpdating] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
 
@@ -30,52 +39,53 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
     });
   };
 
+  useEffect(() => {
+    setName(oldName);
+    setUsername(displayName);
+
+    return () => {
+      setName();
+      setUsername();
+    };
+  }, []);
+
   const updateName = async function () {
-    if (name) {
-      const loginClient = await getLoginClient();
-      setIsUpdating(true);
-      const formData = new FormData();
-      formData.append('display_name', name);
-      formData.append(
-        'birth_date',
-        moment(fullInfo.birth_date, 'X').locale('en').format('jYYYY/jMM/jDD'),
-      );
-      formData.append('gender', 'man');
-      formData.append(
-        'is_password_active',
-        Number(fullInfo.is_password_active),
-      );
-      formData.append('is_finger_active', Number(fullInfo.is_finger_active));
-      formData.append('password', '');
-      formData.append('repeat_password', '');
-      loginClient
-        .post('complete/profile', formData)
-        .then((response) => {
-          setIsUpdating(false);
-          if (response.data.is_successful) {
-            saveFullInfo(response.data.data);
-            AsyncStorage.setItem(
-              'fullInfo',
-              JSON.stringify(response.data.data),
-            );
-            showSnackbar('اطلاعات شما با موفقیت ویرایش شد', 'success');
-            closeModal();
-          } else {
-            setSnackbar({
-              msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
-              visible: true,
-            });
-          }
-        })
-        .catch((e) => {
-          // console.log(e);
-        });
-    } else {
-      setSnackbar({
-        msg: 'لطفا نام را وارد کنید.',
-        visible: true,
+    const loginClient = await getLoginClient();
+    setIsUpdating(true);
+    const formData = new FormData();
+    formData.append('display_name', username);
+    formData.append('name', name);
+    formData.append(
+      'birth_date',
+      moment(fullInfo.birth_date, 'X').locale('en').format('jYYYY/jMM/jDD'),
+    );
+    formData.append('gender', 'man');
+    formData.append('is_password_active', Number(fullInfo.is_password_active));
+    formData.append('is_finger_active', Number(fullInfo.is_finger_active));
+    formData.append('password', fullInfo.password);
+    formData.append('repeat_password', fullInfo.password);
+    loginClient
+      .post('complete/profile', formData)
+      .then(response => {
+        setIsUpdating(false);
+        if (response.data.is_successful) {
+          saveFullInfo(response.data.data);
+          setSnackbar({
+            msg: 'اطلاعات شما با موفقیت ویرایش شد',
+            visible: true,
+            type: 'success',
+          });
+          closeModal();
+        } else {
+          setSnackbar({
+            msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+            visible: true,
+          });
+        }
+      })
+      .catch(e => {
+        // console.log(e);
       });
-    }
   };
 
   return (
@@ -95,18 +105,15 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
       <View style={styles.content}>
         <View style={styles.header}>
           <View style={{ width: rw(11) }} />
-          <Text>{title} خود را وارد کنید</Text>
+          <Text color={COLORS.textCommentCal} bold size={14}>
+            {title} خود را وارد کنید
+          </Text>
           <Pressable onPress={isUpdating ? null : closeModal} hitSlop={7}>
-            <Ionicons
-              name="close"
-              size={32}
-              color={COLORS.icon}
-              style={styles.closeIcon}
-            />
+            <Close style={{ ...ICON_SIZE, marginRight: rw(5) }} />
           </Pressable>
         </View>
         <View style={{ marginTop: rh(6) }}>
-          {title !== 'نام کاربری' && (
+          {title === 'نام' ? (
             <InputRow
               title="نام :"
               placeholder="نام خود را اینجا وارد کنید"
@@ -115,20 +122,22 @@ const EditInfoModal = ({ title, visible, closeModal, displayName }) => {
               containerStyle={styles.input}
               editedText={name}
             />
+          ) : (
+            <InputRow
+              title="نام نمایشی"
+              placeholder="نام نمایشی خود را اینجا وارد کنید"
+              handleTextInput={setUsername}
+              name="username"
+              containerStyle={styles.input}
+              editedText={username}
+            />
           )}
-          {/* <InputRow
-            title={title === 'نام کاربری' ? 'نام کاربری' : 'نام خانوادگی'}
-            placeholder="نام کاربری خود را اینجا وارد کنید"
-            handleTextInput={setUsername}
-            name="username"
-            containerStyle={styles.input}
-          /> */}
         </View>
 
         <Button
           title="تایید اطلاعات"
-          icon="checkmark-sharp"
-          color={COLORS.success}
+          Icon={() => <EnableCheck style={ICON_SIZE} />}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           disabled={isUpdating}
           loading={isUpdating}
           onPress={updateName}
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     width: rw(100),
-    height: rh(40),
+    height: rh(50),
     marginTop: 'auto',
     elevation: 5,
     borderTopRightRadius: 30,

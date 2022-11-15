@@ -1,5 +1,4 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -7,11 +6,9 @@ import {
   LoginScreen,
   RegisterScreen,
   VerificationScreen,
-  SetAlarmScreen,
+  SetPassword,
   SymptomsScreen,
-  PMSInfoScreen,
   EnterInfoScreen,
-  WelcomeScreen,
   ProfileScreen,
   CyclesScreen,
   PrivacyScreen,
@@ -21,13 +18,16 @@ import {
   AddRelScreen,
   UpdateRelScreen,
 } from '../screens';
+import DefaultImages from '../components/common/defaultImages/DefaultImages';
 
 import DrawerNavigator from './DrawerNavigation';
+import { ActivityIndicator } from 'react-native';
+import { COLORS } from '../configs';
 
 const Stack = createStackNavigator();
 
 const linking = {
-  prefixes: ['orkidehM://'],
+  prefixes: ['orkidehm://'],
   config: {
     initialRouteName: 'Login',
     screens: {
@@ -47,30 +47,39 @@ const linking = {
   },
 };
 
-export default function MainStackNavigator({ isLoggedin }) {
+export default function MainStackNavigator({ isLoggedin, showAuth }) {
   return (
     <NavigationContainer
       linking={linking}
-      fallback={<ActivityIndicator color="blue" size="large" />}>
+      fallback={
+        <ActivityIndicator
+          color={COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
+          size="large"
+        />
+      }>
       <Stack.Navigator
         headerMode="none"
-        initialRouteName={isLoggedin ? 'HomeDrawer' : 'Register'}>
+        initialRouteName={
+          isLoggedin && showAuth
+            ? 'Login'
+            : isLoggedin && !showAuth
+            ? 'HomeDrawer'
+            : 'Register'
+        }>
         <Stack.Screen name="HomeDrawer" component={DrawerNavigator} />
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          initialParams={{ editNumber: false }}
+          initialParams={{ editNumber: false, resetPassword: false }}
         />
-        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Verification" component={VerificationScreen} />
         <Stack.Screen
           name="EnterInfo"
           component={EnterInfoScreen}
           initialParams={{ editProfile: false, reEnter: false }}
         />
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="SetAlarm" component={SetAlarmScreen} />
-        <Stack.Screen name="PMSInfo" component={PMSInfoScreen} />
         <Stack.Screen name="Symptoms" component={SymptomsScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Cycles" component={CyclesScreen} />
@@ -80,6 +89,8 @@ export default function MainStackNavigator({ isLoggedin }) {
         <Stack.Screen name="Relations" component={RelationsScreen} />
         <Stack.Screen name="AddRel" component={AddRelScreen} />
         <Stack.Screen name="UpdateRel" component={UpdateRelScreen} />
+        <Stack.Screen name="DefaultImages" component={DefaultImages} />
+        <Stack.Screen name="SetPassword" component={SetPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );

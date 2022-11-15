@@ -1,23 +1,44 @@
 /* eslint-disable react-native/no-inline-styles */
 // /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useContext } from 'react';
-import { View, StyleSheet, Pressable, Image } from 'react-native';
+import React, { useEffect, useContext } from 'react';
+import { View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import CalendarModal from '../calendar/CalendarModal';
 
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 import { COLORS, rh, rw } from '../../configs';
-import { showSnackbar } from '../../libs/helpers';
 
-const Header = ({ navigation, style }) => {
-  const { isPeriodDay, activeRel } = useContext(WomanInfoContext);
-  const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
-  const [showCalendarModal, setShowCalendarModal] = useState(false);
+import MenuIcon from '../../assets/icons/home/menu.svg';
+import { useApi } from '../../libs/hooks';
+import { sendLoveNotifApi } from '../../libs/apiCalls';
+import Text from './Text';
+
+const Header = ({ navigation, style, setShowLovePopup, setSnackbar, ads }) => {
+  const { activeRel, isPeriodDay } = useContext(WomanInfoContext);
+  const [sendLove, setSendLove] = useApi(() =>
+    sendLoveNotifApi(activeRel.relId),
+  );
 
   const onSendLove = () => {
-    showSnackbar('با موفقیت ارسال شد', 'success');
+    if (!activeRel) {
+      return setSnackbar({
+        msg: 'شما هیچ رابطه فعالی ندارید!',
+        visible: true,
+      });
+    }
+    setSendLove();
   };
+
+  useEffect(() => {
+    if (sendLove.data === 200 && sendLove.isSuccess) {
+      setShowLovePopup(true);
+    }
+    if (sendLove.isSuccess && sendLove.data !== 200) {
+      setSnackbar({
+        msg: 'متاسفانه مشکلی بوجود آمده است، مجددا تلاش کنید',
+        visible: true,
+      });
+    }
+  }, [sendLove]);
 
   return (
     <View style={[styles.container, { ...style }]}>
@@ -35,54 +56,41 @@ const Header = ({ navigation, style }) => {
             onPress={onSendLove}
             style={{
               ...styles.sendLoveContainer,
-              backgroundColor: isPeriodDay ? COLORS.rossoCorsa : COLORS.primary,
+              backgroundColor:
+                activeRel && isPeriodDay
+                  ? COLORS.fireEngineRed
+                  : activeRel && !isPeriodDay
+                  ? COLORS.primary
+                  : '',
             }}>
-            <MaterialCommunityIcons
-              name="heart-outline"
-              size={30}
-              color={COLORS.white}
-            />
-          </Pressable>
-          {activeRel && (
-            <Pressable
-              onPress={() => setShowCalendarModal(true)}
-              style={{
-                ...styles.sendLoveContainer,
-                marginLeft: rw(2),
-              }}>
-              <Image
-                source={require('../../assets/icons/home/calendar.png')}
-                style={{ width: 25, height: 25 }}
+            {sendLove.isFetching ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <MaterialCommunityIcons
+                name="heart-outline"
+                size={27}
+                color={activeRel ? COLORS.white : COLORS.icon}
               />
-            </Pressable>
-          )}
+            )}
+          </Pressable>
         </View>
 
         <Pressable onPress={() => navigation.openDrawer()}>
-          <Image
-            source={require('../../assets/icons/home/menu.png')}
-            style={{ width: 25, height: 25, marginRight: rw(4) }}
-          />
+          <MenuIcon style={{ width: 25, height: 25, marginRight: rw(4) }} />
         </Pressable>
-        {showCalendarModal && (
-          <CalendarModal
-            visible={showCalendarModal}
-            closeModal={() => setShowCalendarModal(false)}
-          />
-        )}
       </View>
+      <Text size={12} bold color="rgba(190,160,190, 0.6)">
+        {ads}
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     width: '100%',
-    marginVertical: rh(2),
-    height: 50,
+    height: rh(8),
     backgroundColor: 'transparent',
   },
   leftSide: {
@@ -98,9 +106,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: rw(12.3),
-    height: rh(5.9),
-    borderRadius: 35,
+    width: 45,
+    height: 45,
+    borderRadius: 45 / 2,
   },
 });
 

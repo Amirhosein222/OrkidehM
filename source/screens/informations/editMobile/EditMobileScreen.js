@@ -14,7 +14,7 @@ import {
 } from '../../../components/common';
 
 import getLoginClient from '../../../libs/api/loginClientApi';
-import { validatePhoneNumber, showSnackbar } from '../../../libs/helpers';
+import { validatePhoneNumber } from '../../../libs/helpers';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 
 import { COLORS, rh, rw } from '../../../configs';
@@ -61,10 +61,14 @@ const EditMobileScreen = ({ navigation, route }) => {
       const formData = new FormData();
       formData.append('mobile', phoneNumber);
       formData.append('gender', 'man');
-      loginClient.post('change/mobile', formData).then(async (response) => {
+      loginClient.post('change/mobile', formData).then(async response => {
         setIsLoading(false);
         if (response.data.is_successful) {
-          showSnackbar('شماره موبایل شما با موفقیت تغییر یافت', 'success');
+          setSnackbar({
+            msg: 'شماره موبایل شما با موفقیت تغییر یافت',
+            visible: true,
+            type: 'success',
+          });
           await AsyncStorage.setItem(
             'fullInfo',
             JSON.stringify(response.data.data),

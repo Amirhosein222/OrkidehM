@@ -5,6 +5,7 @@ import { COLORS } from '../../configs';
 
 const Input = ({
   onChangeText,
+  onSubmitEditing = null,
   placeholder,
   keyboardType,
   style,
@@ -15,28 +16,33 @@ const Input = ({
   inputName,
   textColor,
   editedText = null,
+  fontWeight = 'normal',
+  secureTextEntry = false,
+  returnKeyType = 'done',
 }) => {
   const styles = StyleSheet.create({
     input: {
       textAlign: 'right',
-      width: '70%',
-      backgroundColor: COLORS.lightBlue,
       color: textColor ? textColor : 'white',
       borderRadius: 5,
-      fontFamily: 'Qs_Iranyekan_bold',
+      fontFamily:
+        fontWeight === 'normal' ? 'IRANYekanMobileBold' : 'IRANYekanMobileBold',
+      fontSize: 13,
     },
   });
   return (
     <TextInput
       placeholder={placeholder}
-      multiline
+      multiline={multiline}
       value={editedText}
       numberOfLines={lineNums}
       placeholderTextColor={phColor ? phColor : '#fff'}
       style={[styles.input, style]}
       keyboardType={keyboardType}
-      testId="textInput"
       onChangeText={(value) => onChangeText(value, inputName)}
+      onSubmitEditing={onSubmitEditing ? () => onSubmitEditing() : () => {}}
+      returnKeyType="done"
+      // secureTextEntry={secureTextEntry}
     />
   );
 };

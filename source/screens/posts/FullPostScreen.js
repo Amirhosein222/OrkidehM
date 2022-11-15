@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import RenderHtml from 'react-native-render-html';
 
 import Swiper from 'react-native-swiper';
 
@@ -20,14 +21,12 @@ import { VideoPlayerModal } from '../../components/learningBank';
 import getLoginClient from '../../libs/api/loginClientApi';
 
 import {
-  Container,
-  IconWithBg,
-  Divider,
   Text,
   CommentModal,
   TextInput,
   Snackbar,
-  TabBar,
+  BackgroundView,
+  ScreenHeader,
 } from '../../components/common';
 
 import {
@@ -67,7 +66,7 @@ const FullPostScreen = ({ navigation, route }) => {
     const loginClient = await getLoginClient();
     loginClient
       .get(`show/post/detail?id=${params.post.id}&gender=man`)
-      .then((response) => {
+      .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
           setPost(response.data.data);
@@ -117,7 +116,7 @@ const FullPostScreen = ({ navigation, route }) => {
       formData.append('parent_id', '');
       formData.append('gender', 'man');
       const loginClient = await getLoginClient();
-      loginClient.post('comment/store', formData).then((response) => {
+      loginClient.post('comment/store', formData).then(response => {
         setBtnPressed(false);
         if (response.data.is_successful) {
           setNewComment('');
@@ -142,7 +141,7 @@ const FullPostScreen = ({ navigation, route }) => {
     setShowModal(!showModal);
   };
 
-  const onPlayVideo = (vid) => {
+  const onPlayVideo = vid => {
     video.current = vid;
     setVideoModalVisible(true);
   };
@@ -157,127 +156,108 @@ const FullPostScreen = ({ navigation, route }) => {
     getFullPost();
   }, [params]);
 
+  const tagsStyles = {
+    body: {
+      whiteSpace: 'normal',
+      color: 'gray',
+    },
+    a: {
+      color: 'green',
+    },
+    p: {
+      fontSize: '12px',
+      // fontFamily: ''
+    },
+  };
+
   if (isLoading) {
     return (
-      <Container>
-        <View
-          style={{ flex: 1, width: '100%', marginTop: STATUS_BAR_HEIGHT + 5 }}>
-          <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue} large>
-            بانک آموزشی
-          </Text>
-          <Divider
-            width="100%"
-            color={COLORS.dark}
-            style={{ alignSelf: 'center' }}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
+      <BackgroundView>
+        <ScreenHeader title="بانک آموزشی" />
+
+        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           />
         </View>
-      </Container>
+      </BackgroundView>
     );
   } else {
     return (
-      <Container justifyContent="flex-start">
+      <BackgroundView>
         <StatusBar
           translucent
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <View style={styles.header}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <IconWithBg
-              bgColor={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
-              width="40px"
-              height="40px"
-              borderRadius="20px"
-              icon="chevron-left"
-              iconSize={30}
-              marginTop="20px"
-              marginLeft="10px"
-              marginBottom="10px"
-              alignSelf="flex-start"
-            />
-          </Pressable>
-
-          <View style={{ flex: 1, marginRight: 20 }}>
-            <Text color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue} large>
-              بانک آموزشی
-            </Text>
-          </View>
-          <Pressable onPress={() => navigation.openDrawer()}>
-            <MaterialCommunityIcons
-              name="menu"
-              color={COLORS.grey}
-              size={28}
-              style={{ marginRight: 10 }}
-            />
-          </Pressable>
-        </View>
-
-        <Divider width="100%" color={COLORS.dark} />
+        <ScreenHeader title="بانک آموزشی" />
 
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={[SCROLL_VIEW_CONTAINER]}>
-          {medias.length ? (
-            <View style={styles.mediaContainer}>
-              <Swiper width={WIDTH} height={rh(40)} showsButtons={true}>
-                {medias.map((item) => {
-                  return item.hasOwnProperty('image') ? (
-                    <Image
-                      source={{ uri: baseUrl + item.image }}
-                      style={{ width: rw(100), height: '100%' }}
-                    />
-                  ) : (
-                    <Pressable
-                      style={styles.playVideo}
-                      onPress={() => onPlayVideo(item.video)}>
-                      <FontAwesome5
-                        name="play-circle"
-                        size={80}
-                        color="white"
-                        style={{ marginTop: rh(1) }}
+          {
+            medias.length ? (
+              <View style={styles.mediaContainer}>
+                <Swiper width={WIDTH} height={rh(40)} showsButtons={true}>
+                  {medias.map(item => {
+                    return item.hasOwnProperty('image') ? (
+                      <Image
+                        source={{ uri: baseUrl + item.image }}
+                        style={{ width: rw(100), height: '100%' }}
                       />
-                      <Text color="white" large>
-                        مشاهده ویدیو
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </Swiper>
-            </View>
-          ) : (
-            <Image
-              source={require('../../assets/images/01.png')}
-              style={{ width: 100, height: 180 }}
-            />
-          )}
+                    ) : (
+                      <Pressable
+                        style={styles.playVideo}
+                        onPress={() => onPlayVideo(item.video)}>
+                        <FontAwesome5
+                          name="play-circle"
+                          size={80}
+                          color="white"
+                          style={{ marginTop: rh(1) }}
+                        />
+                        <Text color="white" large>
+                          مشاهده ویدیو
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </Swiper>
+              </View>
+            ) : null
+            // <Image
+            //   source={require('../../assets/images/01.png')}
+            //   style={{ width: 100, height: 180 }}
+            // />
+          }
 
           {post ? (
             <>
               <View style={styles.textContainer}>
                 <Text
-                  color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}
+                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
                   medium
                   alignSelf="flex-end"
                   marginTop="20">
                   {numberConverter(post[0].title)}
                 </Text>
-                <Text
+                <RenderHtml
+                  contentWidth={rw(90)}
+                  source={{ html: post[0].text }}
+                  tagsStyles={tagsStyles}
+                />
+
+                {/* <Text
                   color={COLORS.dark}
                   medium
                   textAlign="right"
                   alignSelf="center">
                   {numberConverter(post[0].text.replace(/(<([^>]+)>)/gi, ''))}
-                </Text>
+                </Text> */}
               </View>
 
               <View style={styles.commentSection}>
-                {comments.map((comment) => {
+                {comments.map(comment => {
                   return (
                     <View style={styles.commentContainer}>
                       <View style={styles.comment}>
@@ -286,7 +266,7 @@ const FullPostScreen = ({ navigation, route }) => {
                             marginRight="5"
                             marginTop="3"
                             mini
-                            color={COLORS.blue}>
+                            color={COLORS.primary}>
                             پاسخ دهید
                           </Text>
                         </Pressable>
@@ -307,7 +287,7 @@ const FullPostScreen = ({ navigation, route }) => {
                           height="20px"
                         />
                       </View>
-                      {comment.replies.map((reply) => {
+                      {comment.replies.map(reply => {
                         return (
                           <View
                             style={{
@@ -317,7 +297,7 @@ const FullPostScreen = ({ navigation, route }) => {
                               alignItems: 'center',
                             }}>
                             <Pressable onPress={() => handleModal(reply.id)}>
-                              <Text marginRight="5" mini color={COLORS.blue}>
+                              <Text marginRight="5" mini color={COLORS.primary}>
                                 پاسخ دهید
                               </Text>
                             </Pressable>
@@ -355,14 +335,14 @@ const FullPostScreen = ({ navigation, route }) => {
         </ScrollView>
         <View style={styles.commentInput}>
           {btnPressed ? (
-            <ActivityIndicator size="small" color={COLORS.blue} />
+            <ActivityIndicator size="small" color={COLORS.primary} />
           ) : (
             <Pressable onPress={() => sendComment()}>
               <Text
                 marginRight="5"
                 alignSelf="flex-start"
                 medium
-                color={isPeriodDay ? COLORS.rossoCorsa : COLORS.blue}>
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
                 ثبت
               </Text>
             </Pressable>
@@ -375,7 +355,6 @@ const FullPostScreen = ({ navigation, route }) => {
             editedText={newComment}
           />
         </View>
-        <TabBar seperate={true} navigation={navigation} />
         {showModal ? (
           <CommentModal
             visible={showModal}
@@ -399,7 +378,7 @@ const FullPostScreen = ({ navigation, route }) => {
           video={video.current}
           closeModal={closeModal}
         />
-      </Container>
+      </BackgroundView>
     );
   }
 };
@@ -416,7 +395,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     width: '100%',
-    marginTop: STATUS_BAR_HEIGHT + rh(2),
+    marginTop: STATUS_BAR_HEIGHT + 5,
     alignItems: 'center',
   },
   commentContainer: {

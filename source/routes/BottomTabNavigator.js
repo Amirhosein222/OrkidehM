@@ -1,36 +1,42 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useContext } from 'react';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
 
 import { TabBar } from '../components/common';
-import { HomeScreen, LearningBankScreen, SymptomsScreen } from '../screens';
+import { HomeScreen } from '../screens';
 
-import { MemoryTabs, PeriodTabs } from './TobTabNavigator';
+import {
+  MemoryTabs,
+  PeriodTabs,
+  PartnerMoodsExpsTabs,
+} from './TobTabNavigator';
 
-import { COLORS, rh, rw } from '../configs';
+import {
+  COLORS,
+  rh,
+  rw,
+  TAB_BIG_ICON_SIZE,
+  TAB_SMALL_ICON_SIZE,
+} from '../configs';
 import { WomanInfoContext } from '../libs/context/womanInfoContext';
+
+import BigSweet from '../assets/icons/home/big-sweetheart.svg';
+import SmallSweet from '../assets/icons/home/small-sweetheart.svg';
+import BigMem from '../assets/icons/home/big-memories.svg';
+import SmallMem from '../assets/icons/home/small-memories.svg';
+import BigHome from '../assets/icons/home/big-home.svg';
+import SmallHome from '../assets/icons/home/small-home.svg';
+import SympIcon from '../assets/icons/home/symptoms.svg';
 
 const Tab = createBottomTabNavigator();
 
 export function BottomTabs() {
   const { isPeriodDay } = useContext(WomanInfoContext);
 
-  const handleTabsStyle = (focused) => {
+  const handleTabsStyle = focused => {
     return {
       backgroundColor: isPeriodDay && COLORS.lightGrey,
-    };
-  };
-
-  const iconsBorderStyle = (focused) => {
-    return {
-      borderBottomWidth: focused ? 2 : 0,
-      paddingBottom: focused ? 5 : 0,
-      borderBottomColor: COLORS.textLight,
     };
   };
 
@@ -38,7 +44,7 @@ export function BottomTabs() {
     <Tab.Navigator
       initialRouteName="HomeScreen"
       backBehavior="none"
-      tabBar={(props) => <TabBar {...props} />}
+      tabBar={props => <TabBar {...props} />}
       swipeEnabled={false}
       animationEnabled={false}
       tabBarOptions={{
@@ -47,49 +53,37 @@ export function BottomTabs() {
         upperCaseLabel: false,
       }}>
       <Tab.Screen
-        name="PeriodTabs"
+        name="PartnerMoodsExpsTabs"
         options={{
           title: 'دلبر',
           tabBarIcon: ({ tintColor, focused }) => (
             <View
               style={[
                 handleTabsStyle(focused),
-                iconsBorderStyle(focused),
-                { marginLeft: rw(4) },
+                { marginLeft: rw(0) },
                 { marginTop: rw(1) },
               ]}>
-              <Image
-                source={
-                  focused
-                    ? require('../assets/icons/home/big-sweetheart.png')
-                    : require('../assets/icons/home/small-sweetheart.png')
-                }
-                style={{ width: 28, height: 28 }}
-              />
+              {focused ? (
+                <BigSweet style={TAB_BIG_ICON_SIZE} />
+              ) : (
+                <SmallSweet style={TAB_SMALL_ICON_SIZE} />
+              )}
             </View>
           ),
         }}
-        component={PeriodTabs}
+        component={PartnerMoodsExpsTabs}
       />
       <Tab.Screen
         name="MemoriesTab"
         options={{
           title: 'خاطرات',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                iconsBorderStyle(focused),
-                { marginTop: rw(1) },
-              ]}>
-              <Image
-                source={
-                  focused
-                    ? require('../assets/icons/home/big-memories.png')
-                    : require('../assets/icons/home/small-memories.png')
-                }
-                style={{ width: 28, height: 28 }}
-              />
+            <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
+              {focused ? (
+                <BigMem style={TAB_BIG_ICON_SIZE} />
+              ) : (
+                <SmallMem style={TAB_SMALL_ICON_SIZE} />
+              )}
             </View>
           ),
         }}
@@ -100,41 +94,32 @@ export function BottomTabs() {
         options={{
           title: 'خانه',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View
-              style={[
-                handleTabsStyle(focused),
-                iconsBorderStyle(focused),
-                { marginTop: rw(1) },
-              ]}>
-              <Image
-                source={
-                  focused
-                    ? require('../assets/icons/home/big-home.png')
-                    : require('../assets/icons/home/small-home.png')
-                }
-                style={{ width: 28, height: 28 }}
-              />
+            <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
+              {focused ? (
+                <BigHome style={TAB_BIG_ICON_SIZE} />
+              ) : (
+                <SmallHome style={TAB_SMALL_ICON_SIZE} />
+              )}
             </View>
           ),
         }}
         component={HomeScreen}
       />
       <Tab.Screen
-        name="Symptoms"
+        name="PeriodTabs"
         options={{
           tabBarIcon: ({ tintColor, focused }) => (
-            <Image
-              source={require('../assets/icons/home/symptoms.png')}
+            <SympIcon
               style={{
-                width: 28,
-                height: 28,
-                marginTop: rh(1),
+                width: rw(7.5),
+                height: rh(4.2),
+                marginTop: rh(1.1),
                 marginLeft: rw(1),
               }}
             />
           ),
         }}
-        component={SymptomsScreen}
+        component={PeriodTabs}
       />
     </Tab.Navigator>
   );

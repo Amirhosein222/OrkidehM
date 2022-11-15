@@ -6,22 +6,23 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from '@mohamadkh75/react-native-jalali-datepicker';
 
 import { Button, Text } from '../common';
-import { rw, rh, COLORS } from '../../configs';
+import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
 
-import enableCheck from '../../assets/icons/btns/enabled-check.png';
-import disableCheck from '../../assets/icons/btns/disabled-check.png';
+import EnableCheck from '../../assets/icons/btns/enabled-check.svg';
+import DisableCheck from '../../assets/icons/btns/disabled-check.svg';
+import Close from '../../assets/icons/btns/close.svg';
 
 const SelectBirthDayModal = ({
   visible,
   closeModal,
   setBirthday,
-  atProfile = false,
+  atProfile = { profile: false, isPeriodDay: false },
   updateBirthday = null,
   isUpdating = false,
 }) => {
   const birthday = useRef(null);
   const onSelectDate = () => {
-    if (atProfile) {
+    if (atProfile.profile) {
       updateBirthday('', birthday.current);
       return;
     }
@@ -48,12 +49,7 @@ const SelectBirthDayModal = ({
             onPress={isUpdating ? () => {} : closeModal}
             hitSlop={7}
             style={{ marginLeft: 'auto' }}>
-            <Ionicons
-              name="close"
-              size={32}
-              color={COLORS.icon}
-              style={styles.closeIcon}
-            />
+            <Close style={{ ...ICON_SIZE, ...styles.closeIcon }} />
           </Pressable>
         </View>
         <DatePicker
@@ -67,7 +63,7 @@ const SelectBirthDayModal = ({
           selected="1390/1/18"
           dateSeparator="/"
           minDate="1350/1/18"
-          maxDate="1390/12/29"
+          maxDate="1399/12/29"
           headerContainerStyle={{ height: '15%' }}
           yearMonthBoxStyle={{
             width: '30%',
@@ -81,7 +77,7 @@ const SelectBirthDayModal = ({
           yearMonthTextStyle={{
             fontSize: 22,
             color: COLORS.textCommentCal,
-            fontFamily: 'Qs_Iranyekan_bold',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           iconContainerStyle={{ width: `${100 / 7}%` }}
           backIconStyle={{
@@ -101,7 +97,10 @@ const SelectBirthDayModal = ({
             height: 82,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: COLORS.primary,
+            backgroundColor:
+              atProfile.profile && atProfile.isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
             marginTop: '1.5%',
             marginBottom: 5,
             marginHorizontal: '1.5%',
@@ -111,14 +110,17 @@ const SelectBirthDayModal = ({
           eachYearTextStyle={{
             fontSize: 16,
             color: 'white',
-            fontFamily: 'Qs_Iranyekan_bold',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           eachMonthStyle={{
             width: `${88 / 3}%`,
             height: `${88 / 4}%`,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: COLORS.primary,
+            backgroundColor:
+              atProfile.profile && atProfile.isPeriodDay
+                ? COLORS.fireEngineRed
+                : COLORS.primary,
             marginBottom: '3%',
             borderRadius: 10,
             elevation: 3,
@@ -126,7 +128,7 @@ const SelectBirthDayModal = ({
           eachMonthTextStyle={{
             fontSize: 16,
             color: 'white',
-            fontFamily: 'Qs_Iranyekan_bold',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           weekdaysContainerStyle={{ height: '10%' }}
           weekdayStyle={{
@@ -138,7 +140,7 @@ const SelectBirthDayModal = ({
             fontSize: 16,
             color: COLORS.textCommentCal,
             marginBottom: 5,
-            fontFamily: 'Qs_Iranyekan_bold',
+            fontFamily: 'IRANYekanMobileBold',
           }}
           borderColor={COLORS.textLight}
           dayStyle={{
@@ -154,10 +156,14 @@ const SelectBirthDayModal = ({
             alignItems: 'center',
             borderRadius: 100,
           }}
-          selectedDayColor={COLORS.primary}
+          selectedDayColor={
+            atProfile.profile && atProfile.isPeriodDay
+              ? COLORS.fireEngineRed
+              : COLORS.primary
+          }
           dayTextStyle={{
             fontSize: 18,
-            fontFamily: 'Qs_Iranyekan_bold',
+            fontFamily: 'IRANYekanMobileBold',
             // color: COLORS.textLight,
           }}
           selectedDayTextColor="white"
@@ -169,9 +175,16 @@ const SelectBirthDayModal = ({
         />
 
         <Button
-          title="انتخاب"
-          icons={[disableCheck, enableCheck]}
-          color={COLORS.primary}
+          title={atProfile.profile ? 'تایید اطلاعات' : 'انتخاب'}
+          Icon={[
+            () => <DisableCheck style={ICON_SIZE} />,
+            () => <EnableCheck style={ICON_SIZE} />,
+          ]}
+          color={
+            atProfile.profile && atProfile.isPeriodDay
+              ? COLORS.fireEngineRed
+              : COLORS.primary
+          }
           onPress={onSelectDate}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
           loading={isUpdating}

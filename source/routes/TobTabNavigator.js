@@ -2,10 +2,12 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import {
-  MyMemoriesScreen,
-  AllMemoriesScreen,
+  MyGapsScreen,
+  AllGapsScreen,
   PeriodSymptomsTabScreen,
   SpouseExpectationsTabScreen,
+  PartnerMoodsTabScreen,
+  PartnerExpsTabScreen,
 } from '../screens';
 import { TopTabBar } from '../components/common';
 
@@ -16,8 +18,8 @@ const Tab = createMaterialTopTabNavigator();
 export function MemoryTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="AllMemories"
-      tabBar={(props) => <TopTabBar {...props} />}
+      initialRouteName="AllGaps"
+      tabBar={props => <TopTabBar {...props} />}
       tabBarOptions={{
         contentContainerStyle: {
           backgroundColor: 'red',
@@ -29,22 +31,22 @@ export function MemoryTabs() {
           backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'Qs_Iranyekan_bold',
+          fontFamily: 'IRANYekanMobileBold',
         },
       }}>
       <Tab.Screen
         options={{
-          tabBarLabel: 'خاطرات همه',
+          tabBarLabel: 'گپ',
         }}
-        name="AllMemories"
-        component={AllMemoriesScreen}
+        name="AllGaps"
+        component={AllGapsScreen}
       />
       <Tab.Screen
         options={{
-          tabBarLabel: 'خاطرات من',
+          tabBarLabel: 'گپ های من',
         }}
-        name="MyMemories"
-        component={MyMemoriesScreen}
+        name="MyGaps"
+        component={MyGapsScreen}
       />
     </Tab.Navigator>
   );
@@ -54,7 +56,7 @@ export function PeriodTabs() {
   return (
     <Tab.Navigator
       initialRouteName="PeriodSymptomsTab"
-      tabBar={(props) => <TopTabBar {...props} />}
+      tabBar={props => <TopTabBar {...props} />}
       tabBarOptions={{
         activeTintColor: COLORS.primary,
         inactiveTintColor: COLORS.textLight,
@@ -62,22 +64,59 @@ export function PeriodTabs() {
           backgroundColor: COLORS.primary,
         },
         labelStyle: {
-          fontFamily: 'Qs_Iranyekan_bold',
+          fontFamily: 'IRANYekanMobileBold',
         },
       }}>
       <Tab.Screen
         options={{
-          tabBarLabel: 'حال و احوالت توی این روز چطوره؟',
+          tabBarLabel: 'حال و احوال امروزت',
         }}
         name="PeriodSymptomsTab"
         component={PeriodSymptomsTabScreen}
       />
       <Tab.Screen
         options={{
-          tabBarLabel: 'همسرت چیکار کنه خوشحال بشی؟',
+          tabBarLabel: 'چیکار کنه خوشحال بشی',
         }}
         name="SpouseExpectationsTab"
         component={SpouseExpectationsTabScreen}
+      />
+    </Tab.Navigator>
+  );
+}
+
+export function PartnerMoodsExpsTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="PartnerMoodsTab"
+      tabBar={props => <TopTabBar {...props} />}
+      tabBarOptions={{
+        contentContainerStyle: {
+          backgroundColor: 'red',
+          width: '100%',
+        },
+        activeTintColor: COLORS.primary,
+        inactiveTintColor: COLORS.textLight,
+        indicatorStyle: {
+          backgroundColor: COLORS.primary,
+        },
+        labelStyle: {
+          fontFamily: 'IRANYekanMobileBold',
+        },
+      }}>
+      <Tab.Screen
+        options={{
+          tabBarLabel: 'حال و احوال امروزش',
+        }}
+        name="PartnerMoodsTab"
+        component={PartnerMoodsTabScreen}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: 'چیکار کنی خوشحال بشه',
+        }}
+        name="PartnerExpsTab"
+        component={PartnerExpsTabScreen}
       />
     </Tab.Navigator>
   );
