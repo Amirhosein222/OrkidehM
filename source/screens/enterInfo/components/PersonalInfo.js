@@ -91,15 +91,8 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
     if (picture) {
       formData.append('image', {
         uri: fromDefaultImages ? picture : picture.path,
-        type: `image/${
-          fromDefaultImages
-            ? picture[picture.search(/\.(gif|jpe?g|tiff?|png|jfif|webp|bmp)$/i)]
-            : picture.type
-        }`,
-        name:
-          'profileImg.' + fromDefaultImages
-            ? picture[picture.search(/\.(gif|jpe?g|tiff?|png|jfif|webp|bmp)$/i)]
-            : picture.type,
+        type: 'image/jpeg',
+        name: 'userAvatar',
       });
     }
     formData.append('display_name', username);
@@ -191,7 +184,7 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
             tipText="وارد کردن نام نمایشی الزامی است"
           />
           <Text
-            size={10}
+            size={9}
             color={COLORS.primary}
             alignSelf="flex-end"
             marginRight={rw(4)}>
@@ -208,7 +201,7 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
             tipText="وارد کردن نام الزامی است"
           />
           <Text
-            size={10}
+            size={9}
             color={COLORS.primary}
             alignSelf="flex-end"
             marginRight={rw(4)}>
@@ -221,7 +214,8 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
           handleTextInput={setFamily}
           name="familyName"
         />
-        <View style={{ width: rw(100), alignItems: 'center' }}>
+        <View
+          style={{ width: rw(100), alignItems: 'center', marginBottom: rh(2) }}>
           <View style={styles.birthdayContainer}>
             <Pressable
               hitSlop={7}
@@ -321,7 +315,7 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
             visible={showPictureModal}
             closeModal={() => setShowPictureModal(false)}
             openPicker={() => selectPicture()}
-            openCamera={() => selectPicture(true)}
+            openCamera={() => selectPicture(false, true)}
             openDefaultImages={onDefaultImagePress}
             removePic={() => setPicture(false)}
             showDelete={picture ? true : false}
@@ -415,7 +409,7 @@ const styles = StyleSheet.create({
   stepperContainer: {
     flexDirection: 'row',
     width: rw(100),
-    marginBottom: rh(4),
+    marginBottom: rh(3),
     marginTop: 'auto',
     alignItems: 'center',
     justifyContent: 'space-between',

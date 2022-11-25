@@ -116,6 +116,8 @@ const VerificationScreen = ({ navigation, route }) => {
       );
       const periodStart = AsyncStorage.getItem('periodStart');
       periodStart && AsyncStorage.removeItem('periodStart');
+      AsyncStorage.removeItem('isPassActive');
+      AsyncStorage.removeItem('isFingerActive');
       params.isNew
         ? navigation.dispatch(
             CommonActions.reset({
@@ -272,7 +274,7 @@ const VerificationScreen = ({ navigation, route }) => {
           </Pressable>
         </View>
         <Button
-          Icon={() => <EnableCheck style={ICON_SIZE} />}
+          // Icon={() => <EnableCheck style={ICON_SIZE} />}
           title="تایید کد"
           name="check"
           color={COLORS.primary}

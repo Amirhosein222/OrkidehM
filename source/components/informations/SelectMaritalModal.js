@@ -109,7 +109,7 @@ const SelectMaritalModal = ({ visible, closeModal, setSnackbar }) => {
 
         <Button
           title="تایید اطلاعات"
-          Icon={() => <EnableCheck style={ICON_SIZE} />}
+          // Icon={() => <EnableCheck style={ICON_SIZE} />}
           color={COLORS.primary}
           onPress={onSubmit}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}

@@ -62,7 +62,7 @@ const AddRelScreen = ({ navigation, route }) => {
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image.path);
       });
@@ -71,20 +71,30 @@ const AddRelScreen = ({ navigation, route }) => {
         width: 400,
         height: 400,
         cropping: true,
-      }).then((image) => {
+      }).then(image => {
         setShowPictureModal(false);
         setPicture(image.path);
       });
     }
   };
 
+  const handleShowOrSetSnackbar = () => {
+    params.showSnackbar
+      ? params.showSnackbar({
+          msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
+          visible: true,
+          type: 'success',
+        })
+      : setSnackbar({
+          msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
+          visible: true,
+          type: 'success',
+        });
+  };
+
   useEffect(() => {
     if (addRel.data && addRel.data.is_successful) {
-      setSnackbar({
-        msg: 'اطلاعات همسر شما با موفقیت ثبت شد.',
-        visible: true,
-        type: 'success',
-      });
+      handleShowOrSetSnackbar();
       setPartner('');
       setPartnerMobile('');
       setPicture('');
@@ -138,7 +148,7 @@ const AddRelScreen = ({ navigation, route }) => {
           disabled={addRel.isFetching}
           loading={addRel.isFetching}
           title="ثبت اطلاعات"
-          Icon={() => <EnabledCheck style={ICON_SIZE} />}
+          // Icon={() => <EnabledCheck style={ICON_SIZE} />}
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           onPress={onSubmitRel}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}

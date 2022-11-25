@@ -34,7 +34,7 @@ const PeriodInfoEditModal = ({
     ),
   );
 
-  const handleSelectedValue = (i) => {
+  const handleSelectedValue = i => {
     setSelected(i);
     selectedRef.current =
       cycle.id === 1
@@ -103,7 +103,7 @@ const PeriodInfoEditModal = ({
             fontSize: 24,
             fontFamily: 'IRANYekanMobileBold',
           }}
-          onValueChange={(index) => handleSelectedValue(index)}>
+          onValueChange={index => handleSelectedValue(index)}>
           {cycle.data.map((value, i) => (
             <PickerItem label={value} value={i} key={i} />
           ))}
@@ -111,7 +111,7 @@ const PeriodInfoEditModal = ({
 
         <Button
           title="تایید اطلاعات"
-          Icon={() => <EnableCheck style={ICON_SIZE} />}
+          // Icon={() => <EnableCheck style={ICON_SIZE} />}
           color={COLORS.primary}
           onPress={onSubmit}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}

@@ -30,6 +30,7 @@ import SweetHeartMenu from '../../assets/icons/drawerSettings/sweetheart-menu.sv
 import PsycheTestMenu from '../../assets/icons/drawerSettings/psychologicalTest-menu.svg';
 import ContactAnExpertMenu from '../../assets/icons/drawerSettings/contactAnExpert-menu.svg';
 import SettingMenu from '../../assets/icons/drawerSettings/setting-menu.svg';
+import Instruction from '../../assets/icons/drawerSettings/instruction.svg';
 
 const DrawerUi = ({ navigation }) => {
   const womanInfo = useContext(WomanInfoContext);
@@ -44,7 +45,6 @@ const DrawerUi = ({ navigation }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -68,7 +68,7 @@ const DrawerUi = ({ navigation }) => {
           type: 'success',
         });
       } else {
-        setResetPicker(true);
+        setResetPicker(!resetPicker);
         setSnackbar({
           msg: response.data.message,
           visible: true,
@@ -90,8 +90,10 @@ const DrawerUi = ({ navigation }) => {
 
   const onSelectSpouse = spouse => {
     if (spouse === 'newRel') {
+      setResetPicker(!resetPicker);
       return navigation.navigate('AddRel', {
         handleUpdateRels: womanInfo.getAndHandleRels,
+        showSnackbar: setSnackbar,
       });
     }
     setActiveSpouse(spouse);
@@ -127,11 +129,10 @@ const DrawerUi = ({ navigation }) => {
                   bold
                   color={COLORS.textLight}
                   alignSelf="flex-end">
-                  {numberConverter(
-                    convertToFullDate(womanInfo.fullInfo.birth_date),
-                  )}
+                  {womanInfo.fullInfo.mobile}
                 </Text>
               </View>
+
               {womanInfo.fullInfo.image ? (
                 <View style={styles.avatarBorderdContainer}>
                   <Image
@@ -144,7 +145,7 @@ const DrawerUi = ({ navigation }) => {
                 <View style={styles.avatarBorderdContainer}>
                   <View style={styles.avatarDefaultBorderd}>
                     <Image
-                      source={require('../../assets/vectors/profile/woman-1.png')}
+                      source={require('../../assets/vectors/profile/man-1.png')}
                       style={styles.avatarDefault}
                       resizeMode="contain"
                     />
@@ -168,9 +169,7 @@ const DrawerUi = ({ navigation }) => {
                     bold
                     color={COLORS.textLight}
                     alignSelf="flex-end">
-                    {numberConverter(
-                      convertToFullDate(womanInfo.activeRel.birthday),
-                    )}
+                    {womanInfo.activeRel.mobile}
                   </Text>
                 </View>
                 {womanInfo.activeRel.image ? (
@@ -188,7 +187,7 @@ const DrawerUi = ({ navigation }) => {
                     }}>
                     <View style={styles.avatarDefaultBorderd}>
                       <Image
-                        source={require('../../assets/vectors/profile/man-1.png')}
+                        source={require('../../assets/vectors/profile/woman-1.png')}
                         style={styles.avatarDefault}
                         resizeMode="contain"
                       />
@@ -273,7 +272,7 @@ const DrawerUi = ({ navigation }) => {
           <Text size={11} bold marginRight="15">
             مجله
           </Text>
-          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
+          <Instruction style={{ width: 25, height: 25 }} />
         </Pressable>
         <Divider
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
@@ -349,11 +348,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    // backgroundColor: 'purple',
+    // height: 150,
   },
   avatarContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: rh(15.5),
+    height: rh(14),
     overflow: 'hidden',
     alignSelf: 'center',
     justifyContent: 'flex-end',

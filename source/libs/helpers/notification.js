@@ -7,7 +7,6 @@ const donutsInterest = 'debug-hello';
 
 // Initialize notifications
 export const initPusher = async (userId, token, clear = false) => {
-  console.log('p userId ', userId);
   // Set your app key and register for push
   RNPusherPushNotifications.setInstanceId(PUSHER_INSTANCE_ID);
   // // Init interests after registration
@@ -29,7 +28,7 @@ function onPusherInitError(statusCode, response) {
 }
 
 function onPusherInitSuccess(response) {
-  console.log('PUSHER SUCCESS: ', response);
+  // console.log('PUSHER SUCCESS: ', response);
 }
 
 async function setUser(userId, token, onError, onSuccess) {
@@ -48,7 +47,7 @@ async function setUser(userId, token, onError, onSuccess) {
 
 // Handle notifications received
 const handleNotification = notification => {
-  console.log(notification);
+  // console.log(notification);
 };
 
 // Subscribe to an interest

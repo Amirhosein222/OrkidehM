@@ -12,6 +12,7 @@ const PsychologyTestDetail = ({
   testDetails,
   handleTestAnswers,
   resetState,
+  isFocused,
 }) => {
   const isPeriodDay = useIsPeriodDay();
   const [selectedOption, setSelectedOption] = useState(new Map([]));
@@ -41,8 +42,8 @@ const PsychologyTestDetail = ({
           flexShrink: 1,
           borderBottomWidth: 1,
           borderBottomColor: COLORS.icon,
-          paddingVertical: rh(2),
-          marginVertical: 10,
+          paddingVertical: rh(1),
+          marginVertical: 5,
           width: '80%',
           alignSelf: 'center',
           borderRadius: 5,
@@ -56,7 +57,7 @@ const PsychologyTestDetail = ({
           alignSelf="flex-end">
           {item.question}
         </Text>
-        {item.options.map((op) => {
+        {item.options.map(op => {
           return (
             <View style={styles.checkBoxContainer}>
               <Text small color={COLORS.textLight}>
@@ -64,9 +65,8 @@ const PsychologyTestDetail = ({
               </Text>
               <Checkbox
                 uncheckedColor={COLORS.textLight}
-                color={COLORS.primary}
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
                 // disabled={isLoading ? true : false}
-
                 status={
                   selectedOption.has(op.question_id) &&
                   selectedOption.get(op.question_id).oId === op.id
@@ -104,117 +104,45 @@ const PsychologyTestDetail = ({
 
   useEffect(() => {
     setSelectedOption(new Map([]));
+  }, [isFocused]);
+
+  useEffect(() => {
+    resetState && setSelectedOption(new Map([]));
   }, [resetState]);
 
   return (
-    console.log(resetState),
-    (
-      <View style={{ width: '100%', alignItems: 'center' }}>
-        <Text marginTop={rh(4)} medium bold>
-          {testDetails.title}
+    <View style={{ width: '100%', alignItems: 'center' }}>
+      <Text color={COLORS.textCommentCal} marginTop={rh(4)} siz2={11} bold>
+        {testDetails.title}
+      </Text>
+      <View style={{ width: rw(85) }}>
+        <Text
+          size={10}
+          color={COLORS.textLight}
+          marginRight="10"
+          // alignSelf="flex-end"
+          marginTop="5"
+          textAlign="right">
+          {testDetails.description
+            ? testDetails.description.replace(/(<([^>]+)>)/gi, '')
+            : ''}
         </Text>
-        <Divider
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
-          width="80%"
-          style={{ marginTop: rh(2) }}
-        />
-        <FlatList
-          data={questions}
-          keyExtractor={(item) => item.id}
-          renderItem={RenderQuestions}
-          style={{ marginTop: rh(1), width: '100%' }}
-        />
       </View>
-    )
+
+      <Divider
+        color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
+        width="80%"
+        style={{ marginTop: rh(2) }}
+      />
+      <FlatList
+        data={testDetails.questions}
+        keyExtractor={item => item.id}
+        renderItem={RenderQuestions}
+        style={{ marginTop: rh(1), width: '100%' }}
+      />
+    </View>
   );
 };
-
-const questions = [
-  {
-    created_at: 1661840335,
-    id: 1,
-    options: [
-      {
-        created_at: 1661840408,
-        id: 1,
-        question_id: 1,
-        score: 1,
-        title: 'کمی',
-        updated_at: 1661840408,
-      },
-      {
-        created_at: 1661840419,
-        id: 2,
-        question_id: 1,
-        score: 2,
-        title: 'متوسط',
-        updated_at: 1661840419,
-      },
-      {
-        created_at: 1661840428,
-        id: 3,
-        question_id: 1,
-        score: 3,
-        title: 'زیاد',
-        updated_at: 1661840428,
-      },
-      {
-        created_at: 1661840439,
-        id: 4,
-        question_id: 1,
-        score: 4,
-        title: 'خیلی زیاد',
-        updated_at: 1661840439,
-      },
-    ],
-    question:
-      '1.نتدالزنتیبادنیتبا دمنستیبایبدمنتاردمنتسیا متنابمنت بلیرسیلزدنتساقبل ستنبذ مثنزب',
-    test_id: 1,
-    updated_at: 1661840335,
-  },
-  {
-    created_at: 1661840347,
-    id: 2,
-    options: [
-      {
-        created_at: 1661840452,
-        id: 5,
-        question_id: 2,
-        score: 0,
-        title: 'هرگز',
-        updated_at: 1661840452,
-      },
-      {
-        created_at: 1661840462,
-        id: 6,
-        question_id: 2,
-        score: 1,
-        title: 'به ندرت',
-        updated_at: 1661840462,
-      },
-      {
-        created_at: 1661840472,
-        id: 7,
-        question_id: 2,
-        score: 2,
-        title: 'گاهی',
-        updated_at: 1661840472,
-      },
-      {
-        created_at: 1661840482,
-        id: 8,
-        question_id: 2,
-        score: 3,
-        title: 'اغلب',
-        updated_at: 1661840482,
-      },
-    ],
-    question:
-      '2.ندتاسینبتازثق منتسلایبتسزلایذبدنزتسذیب متاذیبدزتسیذبدزنتسیبا تاذیبنزتاذیبنمت',
-    test_id: 1,
-    updated_at: 1661840347,
-  },
-];
 
 const styles = StyleSheet.create({
   btn: {

@@ -83,7 +83,6 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -107,7 +106,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
           type: 'success',
         });
       } else {
-        setResetPicker(true);
+        setResetPicker(!resetPicker);
         setSnackbar({
           msg: response.data.message,
           visible: true,
@@ -118,8 +117,10 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
 
   const onSelectSpouse = spouse => {
     if (spouse === 'newRel') {
+      setResetPicker(!resetPicker);
       return navigation.navigate('AddRel', {
         handleUpdateRels: womanInfo.getAndHandleRels,
+        showSnackbar: setSnackbar,
       });
     }
     setActiveSpouse(spouse);
@@ -169,7 +170,7 @@ const PartnerMoodsTabScreen = ({ navigation }) => {
             ) : isLoading ? (
               <ActivityIndicator
                 size="large"
-                color={COLORS.primary}
+                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
                 style={{
                   marginTop: 'auto',
                   marginBottom: 'auto',

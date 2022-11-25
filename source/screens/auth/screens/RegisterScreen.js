@@ -230,9 +230,9 @@ const RegisterScreen = ({ navigation, route }) => {
         <Button
           title={params.editNumber === false ? 'دریافت کد تایید' : 'ویرایش'}
           color={COLORS.primary}
-          Icon={() => (
-            <EnabledAccept style={{ ...ICON_SIZE, marginTop: rh(0.5) }} />
-          )}
+          // Icon={() => (
+          //   <EnabledAccept style={{ ...ICON_SIZE, marginTop: rh(0.5) }} />
+          // )}
           loading={
             params.editNumber
               ? changeNumber.isFetching

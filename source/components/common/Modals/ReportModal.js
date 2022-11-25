@@ -180,10 +180,10 @@ const ReportModal = ({ title, id, visible, closeModal, setSnackbar }) => {
           disabled={report.isFetching || !reportOption}
           loading={report.isFetching}
           title={`گزارش ${title}`}
-          Icon={[
-            () => <DsSend style={ICON_SIZE} />,
-            () => <EnSend style={ICON_SIZE} />,
-          ]}
+          // Icon={[
+          //   () => <DsSend style={ICON_SIZE} />,
+          //   () => <EnSend style={ICON_SIZE} />,
+          // ]}
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           onPress={onReport}
           style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(68) }}

@@ -41,7 +41,7 @@ const Button = ({
           <Text size={10.5} bold color={disabled ? COLORS.textLight : color}>
             {title}
           </Text>
-          {/* {handleIcon()} */}
+          {handleIcon()}
         </View>
       )}
     </Pressable>

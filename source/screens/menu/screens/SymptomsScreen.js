@@ -96,7 +96,6 @@ const SymptomsScreen = ({ navigation }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -120,7 +119,7 @@ const SymptomsScreen = ({ navigation }) => {
           type: 'success',
         });
       } else {
-        setResetPicker(true);
+        setResetPicker(!resetPicker);
         setSnackbar({
           msg: response.data.message,
           visible: true,
@@ -130,6 +129,13 @@ const SymptomsScreen = ({ navigation }) => {
   };
 
   const onSelectSpouse = spouse => {
+    if (spouse === 'newRel') {
+      setResetPicker(!resetPicker);
+      return navigation.navigate('AddRel', {
+        handleUpdateRels: womanInfo.getAndHandleRels,
+        showSnackbar: setSnackbar,
+      });
+    }
     setActiveSpouse(spouse);
   };
 

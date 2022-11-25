@@ -89,7 +89,6 @@ const ContactCounselorScreen = ({ navigation }) => {
       formData.append('message', message);
       formData.append('email', email);
       formData.append('gender', 'man');
-      console.log(formData);
       loginClient.post('call/to/admin', formData).then(response => {
         setEmail('');
         setMessage('');
@@ -175,16 +174,16 @@ const ContactCounselorScreen = ({ navigation }) => {
           </View>
           <Button
             title="ارسال"
-            Icon={() => (
-              <SendIcon
-                style={{
-                  width: 25,
-                  height: 25,
-                  marginTop: rh(0.5),
-                  marginLeft: rw(1),
-                }}
-              />
-            )}
+            // Icon={() => (
+            //   <SendIcon
+            //     style={{
+            //       width: 25,
+            //       height: 25,
+            //       marginTop: rh(0.5),
+            //       marginLeft: rw(1),
+            //     }}
+            //   />
+            // )}
             color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
             loading={isSending ? true : false}
             disabled={isSending ? true : false}

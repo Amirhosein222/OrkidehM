@@ -49,7 +49,7 @@ const AddMemoryModal = ({
 
   const mergeMemoryDetails = function () {
     memory = {
-      gender: 'woman',
+      gender: 'man',
       title: mtitle,
       text: memoryText,
     };
@@ -194,18 +194,12 @@ const AddMemoryModal = ({
 
         <Button
           title={edit.isEdit ? 'ویرایش خاطره' : 'ارسال'}
-          Icon={
-            edit.isEdit
-              ? () => <EnabledEdit style={ICON_SIZE} />
-              : () => <EnabledSend style={ICON_SIZE} />
-          }
-          color={
-            isPeriodDay
-              ? COLORS.fireEngineRed
-              : edit.isEdit
-              ? COLORS.borderLinkBtn
-              : COLORS.primary
-          }
+          // Icon={
+          //   edit.isEdit
+          //     ? () => <EnabledEdit style={ICON_SIZE} />
+          //     : () => <EnabledSend style={ICON_SIZE} />
+          // }
+          color={edit.isEdit ? COLORS.borderLinkBtn : COLORS.primary}
           style={styles.btn}
           loading={isSending ? true : false}
           disabled={isSending ? true : false}

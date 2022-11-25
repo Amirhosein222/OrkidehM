@@ -37,6 +37,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
       <PsychologyTestCard
         testTitle={item.title}
         description={item.description}
+        testImage={item.image}
         testId={item.id}
         navigation={navigation}
         showAlert={showAlert}
@@ -95,7 +96,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
           />
         ) : (
           <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <Text size={14} color={COLORS.textLight}>
+            <Text large color={COLORS.blue}>
               در حال حاضر هیچ تستی وجود ندارد!
             </Text>
           </View>

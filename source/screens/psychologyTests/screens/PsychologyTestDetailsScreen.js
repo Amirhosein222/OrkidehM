@@ -1,15 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  StatusBar,
-  ActivityIndicator,
-  FlatList,
-  Image,
-  View,
-  StyleSheet,
-} from 'react-native';
+import { StatusBar, ActivityIndicator, FlatList, Image } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 import {
   Button,
@@ -21,7 +15,7 @@ import { TestResultModal } from '../components/modals';
 import PsychologyTestDetail from '../components/psTestDetails';
 
 import { getTestDetailsApi, submitAnswersApi } from '../apis';
-import { COLORS, ICON_SIZE, rh, rw } from '../../../configs';
+import { baseUrl, COLORS, ICON_SIZE, rh, rw } from '../../../configs';
 import { useIsPeriodDay, useApi } from '../../../libs/hooks';
 
 import EnabledCheck from '../../../assets/icons/btns/enabled-check.svg';
@@ -59,7 +53,10 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   };
 
   const sendTestAnswers = async function () {
-    if (selectedChoices.current.option_id.length < 2) {
+    if (
+      selectedChoices.current.option_id.length <
+      details.data.data.questions.length
+    ) {
       setSnackbar({
         msg: 'لطفا به تمام سوالات پاسخ دهید.',
         visible: true,
@@ -76,6 +73,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         testDetails={item}
         handleTestAnswers={handleTestAnswers}
         resetState={resetState}
+        isFocused={isFocused}
       />
     );
   };
@@ -95,6 +93,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (submitAnswers.data && submitAnswers.data.is_successful) {
+      setResetState(true);
       selectedChoices.current = {
         gender: 'man',
         test_id: params.testId,
@@ -104,19 +103,16 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     }
 
     if (submitAnswers.data && !submitAnswers.data.is_successful) {
+      setResetState(true);
       selectedChoices.current = {
         gender: 'man',
         test_id: params.testId,
         option_id: [],
       };
-      params.showAlert(submitAnswers.data.message);
-      navigation.navigate('PsychologyTests');
+      params.showAlert(JSON.stringify(submitAnswers.data.message));
+      navigation.goBack();
     }
   }, [submitAnswers]);
-
-  useEffect(() => {
-    setResetState(!resetState);
-  }, [isFocused]);
 
   if (details.isFetching) {
     return (
@@ -126,9 +122,14 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
+        <ScreenHeader
+          title="تست های روانشناسی"
+          disableBack={submitAnswers.isFetching}
+        />
         <ActivityIndicator
           size="large"
           color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
     );
@@ -146,12 +147,19 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           disableBack={submitAnswers.isFetching}
         />
 
-        <View style={styles.imageContainer}>
+        {params.testImage ? (
           <Image
-            source={require('../../../assets/images/icons8-heart-100.png')}
-            style={styles.image}
+            source={{ uri: baseUrl + params.testImage }}
+            style={{ width: 200, height: 200 }}
+            resizeMode="contain"
           />
-        </View>
+        ) : (
+          <Octicons
+            name="checklist"
+            size={70}
+            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          />
+        )}
 
         {details.data && (
           <FlatList
@@ -163,21 +171,28 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
         <Button
           title="مشاهده نتیجه"
-          Icon={() => <EnabledCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
+          // Icon={() => <EnabledCheck style={ICON_SIZE} />}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
           onPress={() => sendTestAnswers()}
           loading={submitAnswers.isFetching}
           disabled={submitAnswers.isFetching}
           style={{ marginTop: 'auto', marginBottom: rh(4), width: rw(80) }}
         />
 
-        {showResultModal && (
+        {showResultModal && submitAnswers.data && details.data ? (
           <TestResultModal
             visible={showResultModal}
             closeModal={() => setShowResultModal(false)}
-            tid={params.testId}
+            testInfo={{
+              id: params.testId,
+              score: submitAnswers.data.data.score,
+              total: submitAnswers.data.data.total,
+              title: details.data.data.title,
+              des: details.data.data.description,
+              image: details.data.data.image,
+            }}
           />
-        )}
+        ) : null}
         {snackbar.visible === true ? (
           <Snackbar
             message={snackbar.msg}
@@ -189,29 +204,5 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     );
   }
 };
-
-const styles = StyleSheet.create({
-  btn: {
-    height: 39,
-    borderRadius: 30,
-    justifyContent: 'center',
-    marginTop: 20,
-    margin: 10,
-    width: '50%',
-    alignSelf: 'center',
-  },
-  imageContainer: {
-    width: rw(90),
-    height: rh(10),
-    alignItems: 'center',
-    marginVertical: rh(3),
-    borderRightWidth: 4,
-    borderRightColor: COLORS.icon,
-  },
-  image: {
-    width: 100,
-    height: 100,
-  },
-});
 
 export default PsychologyTestDetailsScreen;

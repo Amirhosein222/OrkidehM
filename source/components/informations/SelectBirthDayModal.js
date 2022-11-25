@@ -169,17 +169,17 @@ const SelectBirthDayModal = ({
           selectedDayTextColor="white"
           dayTextColor={COLORS.textLight}
           disabledTextColor="#4bcffa66"
-          onDateChange={(date) => {
+          onDateChange={date => {
             birthday.current = date;
           }}
         />
 
         <Button
           title={atProfile.profile ? 'تایید اطلاعات' : 'انتخاب'}
-          Icon={[
-            () => <DisableCheck style={ICON_SIZE} />,
-            () => <EnableCheck style={ICON_SIZE} />,
-          ]}
+          // Icon={[
+          //   () => <DisableCheck style={ICON_SIZE} />,
+          //   () => <EnableCheck style={ICON_SIZE} />,
+          // ]}
           color={
             atProfile.profile && atProfile.isPeriodDay
               ? COLORS.fireEngineRed

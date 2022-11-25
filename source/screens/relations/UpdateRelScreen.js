@@ -147,8 +147,8 @@ const UpdateRelScreen = ({ navigation, route }) => {
           disabled={update.isFetching}
           loading={update.isFetching}
           title="ویرایش اطلاعات"
-          Icon={() => <EnabledEdit style={ICON_SIZE} />}
-          color={COLORS.borderLinkBtn}
+          // Icon={() => <EnabledEdit style={ICON_SIZE} />}
+          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.borderLinkBtn}
           onPress={() => onUpdateRel()}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
         />

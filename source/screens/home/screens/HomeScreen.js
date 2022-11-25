@@ -109,7 +109,6 @@ const HomeScreen = ({ navigation, route }) => {
     if (typeof value === 'object') {
       return true;
     }
-    resetPicker && setResetPicker(false);
     const loginClient = await getLoginClient();
     const formData = new FormData();
     formData.append('relation_id', value);
@@ -133,7 +132,7 @@ const HomeScreen = ({ navigation, route }) => {
           type: 'success',
         });
       } else {
-        setResetPicker(true);
+        setResetPicker(!resetPicker);
         setSnackbar({
           msg: response.data.message,
           visible: true,
@@ -144,8 +143,10 @@ const HomeScreen = ({ navigation, route }) => {
 
   const onSelectSpouse = spouse => {
     if (spouse === 'newRel') {
+      setResetPicker(!resetPicker);
       return navigation.navigate('AddRel', {
         handleUpdateRels: getAndHandleRels,
+        showSnackbar: setSnackbar,
       });
     }
     setActiveSpouse(spouse);
@@ -155,7 +156,7 @@ const HomeScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    !settings && setSetts();
+    setSetts();
     setLoginManInfo();
     setPusher();
   }, []);
@@ -196,8 +197,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (loginManInfo.data && loginManInfo.data.is_successful) {
-      console.log('loginManInfo ', loginManInfo.data);
-      saveFullInfo(loginManInfo.data.data[0]);
+      saveFullInfo(loginManInfo.data.data);
     }
   }, [loginManInfo]);
 
@@ -205,6 +205,30 @@ const HomeScreen = ({ navigation, route }) => {
     getAndHandleRels();
   }, []);
 
+  if (fetchingRels) {
+    return (
+      <BackgroundView>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <Header
+          navigation={navigation}
+          style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+          setShowLovePopup={setShowLove}
+          setSnackbar={setSnackbar}
+          ads={adsSettings && adsSettings.value}
+        />
+
+        <ActivityIndicator
+          size="large"
+          color={COLORS.primary}
+          style={{ marginTop: 'auto', marginBottom: 'auto' }}
+        />
+      </BackgroundView>
+    );
+  }
   return (
     <BackgroundView>
       <StatusBar
@@ -221,7 +245,6 @@ const HomeScreen = ({ navigation, route }) => {
       />
 
       <View style={styles.content}>
-        {!fetchingRels && !relations.length ? <NoRelation /> : null}
         {relations.length && !activeRel ? (
           <View style={styles.noRel}>
             <Text color={COLORS.red}>رابطه فعال خود را انتخاب کنید</Text>
@@ -242,7 +265,7 @@ const HomeScreen = ({ navigation, route }) => {
               marginTop: 'auto',
               marginBottom: 'auto',
             }}>
-            <Pregnancy pregnancy={pregnancy} isFetching={fetchingPreg} />
+            <Pregnancy pregnancy={pregnancy} />
             <Image
               source={
                 isPeriodDay
@@ -278,7 +301,6 @@ const styles = StyleSheet.create({
   content: {
     width: '100%',
     alignItems: 'center',
-    // justifyContent: 'space-between',
     flex: 1,
   },
   noRel: {

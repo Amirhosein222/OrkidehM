@@ -42,7 +42,7 @@ const PasswordModal = ({ visible, closeModal, modalType, handleSnackbar }) => {
     });
   };
 
-  const onClose = (status) => {
+  const onClose = status => {
     closeModal(status);
   };
 

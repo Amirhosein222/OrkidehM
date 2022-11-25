@@ -59,7 +59,7 @@ export function BottomTabs() {
           tabBarIcon: ({ tintColor, focused }) => (
             <View
               style={[
-                handleTabsStyle(focused),
+                // handleTabsStyle(focused),
                 { marginLeft: rw(0) },
                 { marginTop: rw(1) },
               ]}>
@@ -78,7 +78,7 @@ export function BottomTabs() {
         options={{
           title: 'خاطرات',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
+            <View style={[{ marginTop: rw(1) }]}>
               {focused ? (
                 <BigMem style={TAB_BIG_ICON_SIZE} />
               ) : (
@@ -94,7 +94,7 @@ export function BottomTabs() {
         options={{
           title: 'خانه',
           tabBarIcon: ({ tintColor, focused }) => (
-            <View style={[handleTabsStyle(focused), { marginTop: rw(1) }]}>
+            <View style={[{ marginTop: rw(1) }]}>
               {focused ? (
                 <BigHome style={TAB_BIG_ICON_SIZE} />
               ) : (

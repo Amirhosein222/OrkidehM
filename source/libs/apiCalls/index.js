@@ -53,8 +53,15 @@ export const getSettings = async function (key) {
 
 export const getManInfo = async function () {
   try {
-    const manClient = await getManClient();
-    const res = await manClient.get('login_man');
+    const token = await getAccessToken();
+    const res = await axios.get(
+      'https://orkidehapp.ir/api/user/get/complete/profile?gender=man',
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+    );
     return res.data;
   } catch (error) {
     // console.log('e ', error.response.status);

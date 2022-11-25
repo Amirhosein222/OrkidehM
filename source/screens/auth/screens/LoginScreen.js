@@ -159,7 +159,7 @@ const LoginScreen = ({ navigation, route }) => {
           // console.log('Authentication error is => ', error);
         });
     } else {
-      console.log('biometric authentication is not available');
+      // console.log('biometric authentication is not available');
     }
   };
 

@@ -15,7 +15,7 @@ export const editPeriodInfoApi = async function (
 
     return res.data;
   } catch (error) {
-    console.log('e ', error.response);
+    // console.log('e ', error.response);
     throw error;
   }
 };
