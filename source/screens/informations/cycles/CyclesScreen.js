@@ -30,7 +30,7 @@ const CyclesScreen = ({ navigation }) => {
 
   const [userCycles, setUserCycles] = useApi(() => getCycles());
 
-  const handleEditModalType = (cyc) => {
+  const handleEditModalType = cyc => {
     setShowEditModal({ show: true, selected: cyc });
   };
 
@@ -120,7 +120,7 @@ const CyclesScreen = ({ navigation }) => {
       ) : (
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       )}

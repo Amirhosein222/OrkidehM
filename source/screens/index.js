@@ -8,7 +8,6 @@ import {
 import HomeScreen from './home';
 import {
   ContactCounselorScreen,
-  LearningBankScreen,
   SymptomsScreen,
   LoveNotificationScreen,
 } from './menu';
@@ -28,9 +27,6 @@ import {
 
 import { EnterInfoScreen } from './enterInfo';
 
-import PostsScreen from './posts/PostsScreen';
-import FullPostScreen from './posts/FullPostScreen';
-
 import { AboutUsScreen, AppGuideScreen } from './about';
 
 import SettingsScreen from './settings';
@@ -41,13 +37,17 @@ import PrivacyScreen from './informations/privacy';
 import RemindersScreen from './informations/reminders';
 import EditMobileScreen from './informations/editMobile';
 
+import EditCyclesScreen from './calendar/screens';
+
+import { MagazineScreen, FullPostScreen, PostsScreen } from './magazine';
+
 export {
   LoginScreen,
   VerificationScreen,
   ContactCounselorScreen,
   HomeScreen,
   SymptomsScreen,
-  LearningBankScreen,
+  MagazineScreen,
   PostsScreen,
   FullPostScreen,
   PeriodSymptomsTabScreen,
@@ -73,4 +73,5 @@ export {
   PartnerMoodsTabScreen,
   PartnerExpsTabScreen,
   SetPassword,
+  EditCyclesScreen,
 };

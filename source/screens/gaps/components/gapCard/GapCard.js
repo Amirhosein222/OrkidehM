@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StyleSheet, Pressable, TextInput, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Comment from '../comment';
@@ -8,11 +15,10 @@ import { Text, ReadMore } from '../../../../components/common';
 import { COLORS, rh, rw } from '../../../../configs';
 import { addCommentApi } from '../../../../libs/apiCalls';
 import { convertToFullDate, numberConverter } from '../../../../libs/helpers';
-import { useApi } from '../../../../libs/hooks';
+import { useApi, useIsPeriodDay } from '../../../../libs/hooks';
 
 import calcDiffDays from '../../helpers/calcDiffDays';
 import { ICON_SIZE } from '../../../../configs/styles';
-import { ActivityIndicator } from 'react-native-paper';
 import { likeGapApi, getCommentsApi } from '../../apis';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
 
@@ -34,6 +40,7 @@ const GapCard = ({
   updateGaps,
   setSnackbar,
 }) => {
+  const isPeriodDay = useIsPeriodDay();
   const { fullInfo } = useContext(WomanInfoContext);
   const [liked, setLiked] = useState();
 
@@ -287,7 +294,10 @@ const GapCard = ({
             disabled={sendCM.isFetching || !comment}
             onPress={onSendComment}>
             {sendCM.isFetching ? (
-              <ActivityIndicator size="small" color={COLORS.primary} />
+              <ActivityIndicator
+                size="small"
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+              />
             ) : (
               <>
                 {comment ? (

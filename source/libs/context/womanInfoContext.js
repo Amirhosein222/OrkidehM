@@ -78,13 +78,13 @@ const WomanInfoProvider = function ({ children }) {
         value: rel.id,
         is_active: rel.is_active,
         is_verified: rel.is_verified,
-        image: rel.woman_image,
-        mobile: rel.woman.mobile,
+        image: rel.woman.image,
+        mobile: rel.woman_mobile,
         birthday: rel.woman.birth_date,
         applicant: rel.applicant,
         verifyCode: rel.verification_code,
       });
-      if (rel.is_active === 1 && rel.id === Number(lastActiveRel)) {
+      if (rel.is_active === true && rel.id === Number(lastActiveRel)) {
         activeRell = rel;
       }
     });
@@ -92,15 +92,15 @@ const WomanInfoProvider = function ({ children }) {
       saveActiveRel({
         relId: activeRell.id,
         label: activeRell.woman_name,
-        image: activeRell.woman_image,
-        mobile: activeRell.woman.mobile,
+        image: activeRell.woman.image,
+        mobile: activeRell.woman_mobile,
         birthday: activeRell.woman.birth_date,
       });
     }
     saveWomanRelations([
       ...relations,
       {
-        label: 'افزودن رابطه جدید',
+        label: 'افزودن دلبر',
         value: 'newRel',
         icon: () => <Icon style={ICON_SIZE} />,
         id: 0,
@@ -111,9 +111,10 @@ const WomanInfoProvider = function ({ children }) {
   useEffect(() => {
     setRels([
       {
-        label: 'افزودن رابطه جدید',
+        label: 'افزودن دلبر',
         value: 'newRel',
         icon: () => <Icon style={ICON_SIZE} />,
+        id: 0,
       },
     ]);
     setGetRelations();

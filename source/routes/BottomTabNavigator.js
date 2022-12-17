@@ -76,7 +76,7 @@ export function BottomTabs() {
       <Tab.Screen
         name="MemoriesTab"
         options={{
-          title: 'خاطرات',
+          title: 'گپ',
           tabBarIcon: ({ tintColor, focused }) => (
             <View style={[{ marginTop: rw(1) }]}>
               {focused ? (

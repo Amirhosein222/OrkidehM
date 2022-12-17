@@ -21,18 +21,17 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
   const navigation = useNavigation();
 
   return (
-    <View
+    <Pressable
+      onPress={() => navigation.navigate('Profile')}
       style={{
         ...styles.avatarContainer,
         justifyContent: profile ? 'center' : 'flex-end',
       }}>
       {!profile && (
         <>
-          <Pressable
-            onPress={() => navigation.navigate('Profile')}
-            style={{ marginTop: rh(0.5), marginRight: 'auto' }}>
+          <View style={{ marginTop: rh(0.5), marginRight: 'auto' }}>
             <NextPage style={ICON_SIZE} />
-          </Pressable>
+          </View>
           <View style={styles.nameContainer}>
             <Text
               bold
@@ -40,7 +39,7 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
               color={COLORS.textDark}
               textAlign="right"
               alignSelf="flex-end">
-              {womanInfo.fullInfo.display_name}
+              {womanInfo.fullInfo.name}
             </Text>
             <Text bold color={COLORS.textLight} alignSelf="flex-end">
               {womanInfo.fullInfo.mobile}
@@ -86,9 +85,7 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
           <Pressable
             style={{
               ...styles.plusIconContainer,
-              backgroundColor: isPeriodDay
-                ? COLORS.fireEngineRed
-                : COLORS.primary,
+              backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
             }}
             hitSlop={7}
             onPress={openPicker}>
@@ -96,7 +93,7 @@ const UserAvatarInfo = ({ profile = false, openPicker = null, picture }) => {
           </Pressable>
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

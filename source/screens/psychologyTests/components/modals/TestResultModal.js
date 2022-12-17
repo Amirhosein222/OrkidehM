@@ -46,14 +46,14 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
         {testInfo.image ? (
           <Image
             source={{ uri: baseUrl + testInfo.image }}
-            style={{ width: 200, height: 200 }}
-            resizeMode="contain"
+            style={{ width: 180, height: 180, borderRadius: 7 }}
+            resizeMode="cover"
           />
         ) : (
           <Octicons
             name="checklist"
             size={70}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         )}
 
@@ -65,12 +65,12 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
 
         <View style={{ width: rw(70), marginVertical: rh(1) }}>
           <Text size={11} color={COLORS.textLight} textAlign="right">
-            {testInfo.des.replace(/(<([^>]+)>)/gi, '')}
+            {testInfo?.des.replace(/(<([^>]+)>)/gi, '')}
           </Text>
         </View>
 
         <View style={styles.scoreContainer}>
-          <Text color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+          <Text color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
             {testInfo.score}{' '}
           </Text>
           <Text color={COLORS.textLight} marginRight={rw(2)}>
@@ -93,9 +93,7 @@ const TestResultModal = ({ testInfo, visible, closeModal }) => {
               position: 'absolute',
               width: testInfo.score * 2,
               height: 8,
-              backgroundColor: isPeriodDay
-                ? COLORS.fireEngineRed
-                : COLORS.primary,
+              backgroundColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
               borderRadius: 20,
               marginBottom: 5,
             }}

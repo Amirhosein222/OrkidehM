@@ -1,11 +1,5 @@
 import ContactCounselorScreen from './ContactCounselorScreen';
-import LearningBankScreen from './LearningBankScreen';
-import SymptomsScreen from './SymptomsScreen';
+import MagazineScreen from './MagazineScreen';
 import LoveNotificationScreen from './loveNotificationScreen';
 
-export {
-  ContactCounselorScreen,
-  LearningBankScreen,
-  SymptomsScreen,
-  LoveNotificationScreen,
-};
+export { ContactCounselorScreen, MagazineScreen, LoveNotificationScreen };

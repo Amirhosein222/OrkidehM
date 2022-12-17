@@ -33,11 +33,11 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
                 styles.text,
                 { color: COLORS.textLight, fontSize: 10.5 },
               ]}>
-              میزان {item.sign.title} امروز پارتنر شما :{' '}
+              میزان {item.sign.title} امروز دلبر شما :{' '}
               <Text
                 style={[
                   {
-                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+                    color: isPeriodDay ? COLORS.periodDay : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>
@@ -46,7 +46,7 @@ const ExpSympCard = ({ item, type, onReadMore }) => {
               <Text
                 style={[
                   {
-                    color: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+                    color: isPeriodDay ? COLORS.periodDay : COLORS.primary,
                     fontSize: 10.5,
                   },
                 ]}>
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     paddingBottom: rh(2),
   },
   icon: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     marginTop: rh(1),
   },
   text: {

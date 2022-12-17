@@ -3,86 +3,54 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Pressable, StyleSheet, ActivityIndicator, View } from 'react-native';
 import { CalendarList } from 'react-native-calendars-persian';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment-jalaali';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import CalendarInfo from '../calendarInfo';
+import { Button } from '../../../../components/common';
 
-import { getDaysGroupedWithCycles } from '../../apis/apis';
-import { useApi } from '../../../../libs/hooks';
 import { WomanInfoContext } from '../../../../libs/context/womanInfoContext';
-import { COLORS, rh, rw } from '../../../../configs';
+import { COLORS, ICON_SIZE, rh, rw } from '../../../../configs';
 import { useIsPeriodDay } from '../../../../libs/hooks';
 
-import { testDates } from './testDates';
+import EditIcon from '../../../../assets/icons/btns/enabled-edit.svg';
 import { CALENDAR_THEME } from '../../theme';
 
 const CalendarModal = ({ visible, closeModal, updateCal }) => {
   const isPeriodDay = useIsPeriodDay();
+  const navigation = useNavigation();
   const { userCalendar } = useContext(WomanInfoContext);
   const [currentMarkedDates, setCurrentMarkedDates] = useState([]);
-  const [daysGpWithCycles, setDaysGpWithCycles] = useApi(() =>
-    getDaysGroupedWithCycles(),
-  );
-
-  const handleCyclesGpDays = (i, cycleId) => {
-    let startDay = i;
-    if (
-      daysGpWithCycles.data &&
-      daysGpWithCycles.data.data.hasCycle[0].days[i].cycle_id === cycleId
-    ) {
-      startDay = startDay + 1;
-    }
-    return startDay;
-  };
 
   // convert current dates from calendar api, then render on Calendar
   const handleCurrentMarkedDates = function (calendar) {
     const currentDates = {};
-    calendar.map((item, index) => {
+    calendar.map(item => {
       const convertedDate = moment(item.date, 'X')
         .locale('en')
         .format('YYYY-MM-DD');
       currentDates[convertedDate] = {
         selected: true,
         marked: true,
-        selectedColor:
-          item.type === 'period'
-            ? COLORS.primary
-            : item.type === 'sex'
-            ? COLORS.white
-            : item.type === 'period_f'
-            ? COLORS.white
-            : item.type === 'ovulation_f'
-            ? COLORS.darkYellow
-            : item.type === 'pms'
-            ? COLORS.pmsCircle
-            : COLORS.darkRed,
+        selectedColor: item.type === 'ims' ? COLORS.primary : COLORS.white,
         type: item.type,
-        cycleDay: handleCyclesGpDays(index, item.cycle_id),
-        selectedTextColor:
-          item.type === 'sex' || item.type === 'period_f' ? '#B7AFB9' : 'white',
-        borderColor:
-          item.type === 'sex'
-            ? COLORS.fireEngineRed
-            : item.type === 'period_f'
-            ? COLORS.primary
-            : null,
+        selectedTextColor: item.type === 'sex' ? '#B7AFB9' : 'white',
+        borderColor: item.type === 'sex' ? COLORS.periodDay : null,
       };
     });
     setCurrentMarkedDates(currentDates);
   };
 
-  useEffect(() => {
-    setDaysGpWithCycles();
-  }, []);
+  const navigateToEditCycles = () => {
+    navigation.navigate('EditCycles');
+    closeModal();
+  };
 
   useEffect(() => {
-    if (daysGpWithCycles.data && daysGpWithCycles.data.is_successful) {
-      handleCurrentMarkedDates([...userCalendar]);
-    }
-  }, [daysGpWithCycles]);
+    handleCurrentMarkedDates(userCalendar);
+  }, []);
 
   return (
     <Modal
@@ -115,7 +83,7 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
         {currentMarkedDates.length !== 0 ? (
           <CalendarList
             jalali
-            markedDates={testDates}
+            markedDates={currentMarkedDates}
             hideExtraDays={true}
             markingType="simple"
             disableMonthChange={false}
@@ -131,10 +99,19 @@ const CalendarModal = ({ visible, closeModal, updateCal }) => {
         ) : (
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+            style={{ flex: 1 }}
           />
         )}
         <CalendarInfo showBtns={false} />
+
+        <Button
+          title="ویرایش دوره ها"
+          Icon={() => <EditIcon style={ICON_SIZE} />}
+          color={COLORS.borderLinkBtn}
+          style={{ ...styles.btn, marginTop: rh(5), marginBottom: rh(4) }}
+          onPress={() => navigateToEditCycles()}
+        />
       </View>
     </Modal>
   );
@@ -169,7 +146,12 @@ const styles = StyleSheet.create({
 
   calendar: {
     width: '100%',
-    marginTop: rh(2),
+  },
+  btn: {
+    width: '80%',
+    height: 40,
+    borderRadius: 20,
+    marginBottom: 10,
   },
 });
 export default CalendarModal;

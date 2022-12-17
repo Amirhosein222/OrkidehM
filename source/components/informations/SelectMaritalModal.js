@@ -9,11 +9,14 @@ import { setMaritalStatusApi } from '../../libs/apiCalls';
 import { useApi } from '../../libs/hooks';
 
 import EnableCheck from '../../assets/icons/btns/enabled-check.svg';
+import PEnableCheck from '../../assets/icons/btns/penabled-check.svg';
 import Close from '../../assets/icons/btns/close.svg';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
 const SelectMaritalModal = ({ visible, closeModal, setSnackbar }) => {
-  const { saveFullInfo, fullInfo, allSettings } = useContext(WomanInfoContext);
+  const { saveFullInfo, fullInfo, allSettings, isPeriodDay } = useContext(
+    WomanInfoContext,
+  );
 
   const [resetPicker, setResetPicker] = useState(false);
   const selectedOption = useRef(null);
@@ -109,8 +112,12 @@ const SelectMaritalModal = ({ visible, closeModal, setSnackbar }) => {
 
         <Button
           title="تایید اطلاعات"
-          // Icon={() => <EnableCheck style={ICON_SIZE} />}
-          color={COLORS.primary}
+          Icon={
+            isPeriodDay
+              ? () => <PEnableCheck style={ICON_SIZE} />
+              : () => <EnableCheck style={ICON_SIZE} />
+          }
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={onSubmit}
           style={{ marginTop: 'auto', marginBottom: rh(4) }}
           loading={status.isFetching}

@@ -1,3 +1,3 @@
-import { getDaysGroupedWithCycles } from './apis';
+import { updateCalendarApi, getCalendarApi } from './apis';
 
-export { getDaysGroupedWithCycles };
+export { updateCalendarApi, getCalendarApi };

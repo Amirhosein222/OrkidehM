@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from '@mohamadkh75/react-native-jalali-datepicker';
@@ -8,9 +8,11 @@ import DatePicker from '@mohamadkh75/react-native-jalali-datepicker';
 import { Button, Text } from '../common';
 import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
 
-import EnableCheck from '../../assets/icons/btns/enabled-check.svg';
+import EnableCheck from '../../assets/icons/btns/enabled-check.png';
+import PEnableCheck from '../../assets/icons/btns/penabled-check.svg';
 import DisableCheck from '../../assets/icons/btns/disabled-check.svg';
 import Close from '../../assets/icons/btns/close.svg';
+import { useIsPeriodDay } from '../../libs/hooks';
 
 const SelectBirthDayModal = ({
   visible,
@@ -20,6 +22,7 @@ const SelectBirthDayModal = ({
   updateBirthday = null,
   isUpdating = false,
 }) => {
+  const isPeriodDay = useIsPeriodDay();
   const birthday = useRef(null);
   const onSelectDate = () => {
     if (atProfile.profile) {
@@ -99,7 +102,7 @@ const SelectBirthDayModal = ({
             alignItems: 'center',
             backgroundColor:
               atProfile.profile && atProfile.isPeriodDay
-                ? COLORS.fireEngineRed
+                ? COLORS.periodDay
                 : COLORS.primary,
             marginTop: '1.5%',
             marginBottom: 5,
@@ -119,7 +122,7 @@ const SelectBirthDayModal = ({
             alignItems: 'center',
             backgroundColor:
               atProfile.profile && atProfile.isPeriodDay
-                ? COLORS.fireEngineRed
+                ? COLORS.periodDay
                 : COLORS.primary,
             marginBottom: '3%',
             borderRadius: 10,
@@ -158,7 +161,7 @@ const SelectBirthDayModal = ({
           }}
           selectedDayColor={
             atProfile.profile && atProfile.isPeriodDay
-              ? COLORS.fireEngineRed
+              ? COLORS.periodDay
               : COLORS.primary
           }
           dayTextStyle={{
@@ -176,13 +179,20 @@ const SelectBirthDayModal = ({
 
         <Button
           title={atProfile.profile ? 'تایید اطلاعات' : 'انتخاب'}
-          // Icon={[
-          //   () => <DisableCheck style={ICON_SIZE} />,
-          //   () => <EnableCheck style={ICON_SIZE} />,
-          // ]}
+          Icon={
+            atProfile.profile && atProfile.isPeriodDay
+              ? [
+                  () => <DisableCheck style={ICON_SIZE} />,
+                  () => <PEnableCheck style={ICON_SIZE} />,
+                ]
+              : [
+                  () => <DisableCheck style={ICON_SIZE} />,
+                  () => <Image source={EnableCheck} style={ICON_SIZE} />,
+                ]
+          }
           color={
             atProfile.profile && atProfile.isPeriodDay
-              ? COLORS.fireEngineRed
+              ? COLORS.periodDay
               : COLORS.primary
           }
           onPress={onSelectDate}

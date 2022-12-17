@@ -69,7 +69,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
         <ScreenHeader title="تست های روانشناسی" />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -96,7 +96,7 @@ const PsychologyTestsScreen = ({ navigation }) => {
           />
         ) : (
           <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
-            <Text large color={COLORS.blue}>
+            <Text size={14} color={COLORS.blue}>
               در حال حاضر هیچ تستی وجود ندارد!
             </Text>
           </View>

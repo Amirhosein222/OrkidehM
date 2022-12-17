@@ -66,6 +66,8 @@ const PeriodSymptomsTabScreen = () => {
         onPress={onSymptomSelect}
         onReadMore={openInfoModal}
         alreadySelected={alreadySelected}
+        setSnackbar={setSnackbar}
+        updateData={setMySigns}
       />
     );
   };
@@ -107,7 +109,7 @@ const PeriodSymptomsTabScreen = () => {
       <BackgroundView resizeMode="cover">
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>

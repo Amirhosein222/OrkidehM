@@ -102,6 +102,10 @@ const VerificationScreen = ({ navigation, route }) => {
       type: 'success',
       delay: 3000,
     });
+
+    return () => {
+      clearTimeout();
+    };
   }, []);
 
   useEffect(() => {
@@ -181,7 +185,6 @@ const VerificationScreen = ({ navigation, route }) => {
 
       <View style={styles.content}>
         <Pressable
-          disabled={!resendCode ? true : false}
           style={{
             alignSelf: 'flex-start',
             marginTop: rh(3),
@@ -246,7 +249,11 @@ const VerificationScreen = ({ navigation, route }) => {
               digitStyle={{
                 backgroundColor: '#FFF',
               }}
-              digitTxtStyle={{ color: COLORS.textDark }}
+              digitTxtStyle={{
+                fontFamily: 'IRANYekanMobileBold',
+                color: COLORS.textDark,
+                fontWeight: 'normal',
+              }}
               timeLabelStyle={{
                 color: 'red',
                 fontFamily: 'IRANYekanMobileBold',
@@ -274,7 +281,7 @@ const VerificationScreen = ({ navigation, route }) => {
           </Pressable>
         </View>
         <Button
-          // Icon={() => <EnableCheck style={ICON_SIZE} />}
+          Icon={() => <EnableCheck style={ICON_SIZE} />}
           title="تایید کد"
           name="check"
           color={COLORS.primary}

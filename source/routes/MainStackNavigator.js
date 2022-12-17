@@ -7,7 +7,6 @@ import {
   RegisterScreen,
   VerificationScreen,
   SetPassword,
-  SymptomsScreen,
   EnterInfoScreen,
   ProfileScreen,
   CyclesScreen,
@@ -78,9 +77,12 @@ export default function MainStackNavigator({ isLoggedin, showAuth }) {
         <Stack.Screen
           name="EnterInfo"
           component={EnterInfoScreen}
-          initialParams={{ editProfile: false, reEnter: false }}
+          initialParams={{
+            editProfile: false,
+            reEnter: false,
+            unCompleteRegister: false,
+          }}
         />
-        <Stack.Screen name="Symptoms" component={SymptomsScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Cycles" component={CyclesScreen} />
         <Stack.Screen name="Reminders" component={RemindersScreen} />

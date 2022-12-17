@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useContext } from 'react';
 import { View, StatusBar, StyleSheet, Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 
 import {
@@ -18,14 +17,14 @@ import { getSettings, sendActivationCode } from '../../../libs/apiCalls';
 import { validatePhoneNumber } from '../../../libs/helpers';
 
 import { COLORS, ICON_SIZE, rh, rw, STATUS_BAR_HEIGHT } from '../../../configs';
+import EnabledAccept from '../../../assets/icons/btns/enabled-accept.png';
 
 import loginBg from '../../../assets/vectors/register/login.png';
-import EnabledAccept from '../../../assets/icons/btns/enabled-accept.svg';
 import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 
 const RegisterScreen = ({ navigation, route }) => {
   const params = route.params;
-  const { saveSettings } = useContext(WomanInfoContext);
+  const { saveAllSettings, saveSettings } = useContext(WomanInfoContext);
   const [settings, setSettings] = useApi(() => getSettings(''));
   const [phoneNumber, setPhoneNumber] = useState('');
   const [regentCode, setRegentCode] = useState('');
@@ -164,6 +163,7 @@ const RegisterScreen = ({ navigation, route }) => {
         {},
       );
       saveSettings(settingsObj);
+      saveAllSettings(settings.data.data);
     }
   }, [settings]);
 
@@ -202,7 +202,7 @@ const RegisterScreen = ({ navigation, route }) => {
         {!params.editNumber && !params.resetPassword ? (
           <InputRow
             title="کد معرف :"
-            placeholder="کد معرف خود را اینجا وارد کنید"
+            placeholder="اختیاری"
             containerStyle={{ marginTop: rh(0.5), marginBottom: rh(1) }}
             handleTextInput={setRegentCode}
             name="regentCode"
@@ -230,9 +230,12 @@ const RegisterScreen = ({ navigation, route }) => {
         <Button
           title={params.editNumber === false ? 'دریافت کد تایید' : 'ویرایش'}
           color={COLORS.primary}
-          // Icon={() => (
-          //   <EnabledAccept style={{ ...ICON_SIZE, marginTop: rh(0.5) }} />
-          // )}
+          Icon={() => (
+            <Image
+              source={EnabledAccept}
+              style={{ ...ICON_SIZE, marginTop: rh(0.5) }}
+            />
+          )}
           loading={
             params.editNumber
               ? changeNumber.isFetching

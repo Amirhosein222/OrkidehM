@@ -12,6 +12,7 @@ import getLoginClient from '../../../../libs/api/loginClientApi';
 import { COLORS, rh, rw } from '../../../../configs';
 
 import EnabledSend from '../../../../assets/icons/btns/enabled-send.svg';
+import PEnabledSend from '../../../../assets/icons/btns/penabled-send.svg';
 import EnabledEdit from '../../../../assets/icons/btns/enabled-edit.svg';
 import { ICON_SIZE } from '../../../../configs/styles';
 
@@ -194,12 +195,24 @@ const AddMemoryModal = ({
 
         <Button
           title={edit.isEdit ? 'ویرایش خاطره' : 'ارسال'}
-          // Icon={
-          //   edit.isEdit
-          //     ? () => <EnabledEdit style={ICON_SIZE} />
-          //     : () => <EnabledSend style={ICON_SIZE} />
-          // }
-          color={edit.isEdit ? COLORS.borderLinkBtn : COLORS.primary}
+          Icon={
+            edit.isEdit
+              ? isPeriodDay
+                ? null
+                : () => <EnabledEdit style={ICON_SIZE} />
+              : isPeriodDay
+              ? null
+              : () => <EnabledSend style={ICON_SIZE} />
+          }
+          color={
+            edit.isEdit
+              ? isPeriodDay
+                ? COLORS.periodDay
+                : COLORS.borderLinkBtn
+              : isPeriodDay
+              ? COLORS.periodDay
+              : COLORS.primary
+          }
           style={styles.btn}
           loading={isSending ? true : false}
           disabled={isSending ? true : false}

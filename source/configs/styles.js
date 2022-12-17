@@ -18,7 +18,8 @@ export const PALETTE = {
   vividSkyBlue: '#48c7ef',
   outerSpaceCrayola: '#1B3133',
   ashGray: '#AFB8B6',
-  fireEngineRed: '#D22328',
+  indianRed: '#E15155',
+  middlePurple: '#E37FB4',
 };
 
 const COLORS = {
@@ -34,7 +35,9 @@ const COLORS = {
   icon: PALETTE.blackShadowsDark,
   white: PALETTE.white,
   cardBg: PALETTE.white1,
-  fireEngineRed: PALETTE.fireEngineRed,
+  periodDay: PALETTE.indianRed,
+  calPink: PALETTE.middlePurple,
+  lightPink: '#FAEDF4',
   darkYellow: '#FFCC00',
   red: '#FE024E',
   red1: '#FFC2D4',
@@ -54,6 +57,7 @@ const COLORS = {
   expSympReadMore: '#B7AFB9',
   tabBarBg: '#F4EDED',
   plusIconBg: '#E27FB4',
+  pmsCircle: '#9A8AC2',
 };
 
 const SCROLL_VIEW_CONTAINER = {
@@ -68,27 +72,6 @@ const SNACKBAR_OPTIONS = {
   backgroundColor: COLORS.red,
 };
 
-const CALENDAR_THEME = {
-  calendarBackground: '#ffffff',
-  textSectionTitleColor: COLORS.blue,
-  selectedDayBackgroundColor: '#00adf5',
-  selectedDayTextColor: '#ffffff',
-  todayTextColor: '#00adf5',
-  dayTextColor: '#2d4150',
-  textDisabledColor: '#d9e1e8',
-  dotColor: '#00adf5',
-  selectedDotColor: '#ffffff',
-  arrowColor: COLORS.blue,
-  monthTextColor: COLORS.blue,
-  textDayFontFamily: 'Qs_Iranyekan_bold',
-  textMonthFontFamily: 'Qs_Iranyekan_bold',
-  textDayHeaderFontFamily: 'Qs_Iranyekan_bold',
-  textMonthFontWeight: 'bold',
-  textDayFontSize: 14,
-  textMonthFontSize: 14,
-  textDayHeaderFontSize: 10,
-};
-
 const ICON_SIZE = { width: 25, height: 25 };
 
 const TAB_BIG_ICON_SIZE = { width: 25, height: 25 };
@@ -98,7 +81,6 @@ export {
   SCROLL_VIEW_CONTAINER,
   COLORS,
   SNACKBAR_OPTIONS,
-  CALENDAR_THEME,
   ICON_SIZE,
   TAB_BIG_ICON_SIZE,
   TAB_SMALL_ICON_SIZE,

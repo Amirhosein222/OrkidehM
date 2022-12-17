@@ -91,11 +91,11 @@ const DeleteModal = ({
             />
           </Pressable>
         </View>
-        <Image source={deleteVector} style={{ width: 150, height: 150 }} />
-        <Text bold medium color={COLORS.textCommentCal}>
+        <Image source={deleteVector} style={{ width: 170, height: 170 }} />
+        <Text bold size={13} color={COLORS.textCommentCal}>
           حذف {title}
         </Text>
-        <Text color={COLORS.textLight} marginTop={rh(2)}>
+        <Text size={12} color={COLORS.textLight} marginTop={rh(2)}>
           آیا از حذف {title} خود مطمئن هستید؟
         </Text>
 
@@ -106,7 +106,7 @@ const DeleteModal = ({
           loading={isDeleting}
           disabled={isDeleting}
           onPress={type === 'rel' ? onDeleteRel : onDeleteMem}
-          style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(62) }}
+          style={{ marginTop: 'auto', marginBottom: rh(2), width: rw(62) }}
         />
       </View>
     </Modal>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: rw(80),
-    height: rh(45),
+    height: rh(47),
     elevation: 5,
     borderRadius: 25,
     backgroundColor: COLORS.mainBg,

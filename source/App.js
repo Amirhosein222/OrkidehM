@@ -1,6 +1,9 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
 import Orientation from 'react-native-orientation-locker';
+const moment = require('moment-jalaali');
+
+moment.loadPersian();
 
 import MainStackNavigator from './routes/MainStackNavigator';
 

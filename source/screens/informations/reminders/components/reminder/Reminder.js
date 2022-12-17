@@ -1,17 +1,13 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { StyleSheet, View, Pressable } from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View } from 'react-native';
 import { Switch } from 'react-native-paper';
 
-import { Text, InputRow } from '../../../../../components/common';
+import { Text } from '../../../../../components/common';
 import { COLORS, rh, rw } from '../../../../../configs';
 
 const Reminder = ({ name = 'default', title, icon, onPress, data }) => {
   const [beforeP, setBeforeP] = useState(false);
-  const navigation = useNavigation();
 
   const onToggleSwitch = () => setBeforeP(!beforeP);
 

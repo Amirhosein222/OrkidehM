@@ -98,7 +98,7 @@ const PostsScreen = ({ navigation, route }) => {
             marginBottom: rh(2),
           }}>
           <Text
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             medium
             alignSelf="flex-end"
             marginRight="0"
@@ -118,7 +118,7 @@ const PostsScreen = ({ navigation, route }) => {
             <Text
               marginRight="5"
               alignSelf="flex-start"
-              color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+              color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
               بیشتر...
             </Text>
           </Pressable>
@@ -139,7 +139,7 @@ const PostsScreen = ({ navigation, route }) => {
         <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         </View>
       </BackgroundView>

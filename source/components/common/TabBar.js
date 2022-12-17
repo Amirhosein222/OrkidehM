@@ -12,11 +12,11 @@ const TabBar = ({ state, descriptors, navigation }) => {
   const { routes, index } = state;
   const handlePeriodTabStyles = () => {
     return isPeriodDay
-      ? { ...styles.plusIconContainer, backgroundColor: COLORS.fireEngineRed }
+      ? { ...styles.plusIconContainer, backgroundColor: COLORS.periodDay }
       : styles.plusIconContainer;
   };
 
-  const textBorderStyle = (focused) => {
+  const textBorderStyle = focused => {
     return {
       borderBottomWidth: focused ? 2 : 0,
       paddingBottom: focused ? rh(0.2) : 0,
@@ -64,7 +64,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
                 tintColor,
                 focused,
               })}
-              {route.name !== 'LearningBank' && (
+              {route.name !== 'Magazine' && (
                 <Text
                   color={COLORS.textLight}
                   size={focused ? 9.5 : 8}

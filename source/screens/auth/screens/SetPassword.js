@@ -82,7 +82,7 @@ const SetPassword = ({ route, navigation }) => {
             ],
           }),
         );
-      }, 3000);
+      }, 2500);
     }
     if (submitPassword.data && !submitPassword.data.is_successful) {
       setSnackbar({

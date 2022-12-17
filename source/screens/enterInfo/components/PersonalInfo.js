@@ -13,7 +13,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { CommonActions } from '@react-navigation/native';
 
 import SelectBirthDayModal from '../../../components/informations/SelectBirthDayModal';
 import SelectPictureModal from '../../../components/informations/SelectPictureModal';
@@ -24,13 +23,15 @@ import { WomanInfoContext } from '../../../libs/context/womanInfoContext';
 import { COLORS, rw, rh } from '../../../configs';
 
 import AddMemoriesIcon from '../../../assets/icons/btns/add-memories.svg';
+import MaritalStatus from './MaritalStatus';
 
-const PersonalInfo = ({ editProfile, editName, navigation }) => {
+const PersonalInfo = ({ goToNextStage, editProfile, editName, navigation }) => {
   const { registerStage } = useContext(WomanInfoContext);
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [family, setFamily] = useState('');
+  const [marital, setMarital] = useState('');
   const [picture, setPicture] = useState('');
   const [birthday, setBirthday] = useState('');
   const [showBirthdayModal, setShowBirthdayModal] = useState(false);
@@ -98,22 +99,18 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
     formData.append('display_name', username);
     formData.append('name', name);
     formData.append('birth_date', birthday);
+    formData.append('status_married', marital);
     formData.append('is_password_active', 0);
     formData.append('is_finger_active', 0);
     formData.append('password', '');
     formData.append('repeat_password', '');
-    formData.append('gender', 'man');
+    formData.append('gender', 'woman');
     loginClient
       .post('complete/profile', formData)
       .then(response => {
         setIsLoading(false);
         if (response.data.is_successful) {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'HomeDrawer' }],
-            }),
-          );
+          goToNextStage(1);
         } else {
           setSnackbar({
             msg: 'متاسفانه مشکلی بوجود آمده است',
@@ -205,17 +202,17 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
             color={COLORS.primary}
             alignSelf="flex-end"
             marginRight={rw(4)}>
-            نام برای مشاهده در بخش ارتباط با همسر استفاده می شود
+            نام فقط برای مشاهده در بخش ارتباط با دلبر استفاده می شود
           </Text>
         </View>
         <InputRow
           title="نام خانوادگی :"
-          placeholder="نام خانوادگی خود را اینجا وارد کنید"
+          placeholder="اختیاری"
           handleTextInput={setFamily}
           name="familyName"
         />
         <View
-          style={{ width: rw(100), alignItems: 'center', marginBottom: rh(2) }}>
+          style={{ width: rw(100), alignItems: 'center', marginBottom: rh(1) }}>
           <View style={styles.birthdayContainer}>
             <Pressable
               hitSlop={7}
@@ -233,10 +230,11 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
             </View>
             <View style={{ width: rw(27) }}>
               <Text size={11} color={COLORS.textLight} alignSelf="flex-end">
-                تاریخ تولد
+                تاریخ تولد :
               </Text>
             </View>
           </View>
+
           {!birthday && (
             <View
               style={{
@@ -252,6 +250,8 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
           )}
         </View>
 
+        <MaritalStatus setMarital={setMarital} selectedValue={marital} />
+
         <View style={styles.stepperContainer}>
           <View style={{ width: rw(24) }} />
           <View
@@ -265,6 +265,22 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
               color={registerStage === 0 ? COLORS.primary : COLORS.icon}
               size={14}
               style={{ marginRight: rw(1.5) }}
+            />
+            <MaterialIcons
+              name="circle"
+              color={registerStage === 1 ? COLORS.primary : COLORS.icon}
+              size={14}
+            />
+            <MaterialIcons
+              name="circle"
+              color={registerStage === 2 ? COLORS.primary : COLORS.icon}
+              size={14}
+              style={{ marginHorizontal: rw(1.5) }}
+            />
+            <MaterialIcons
+              name="circle"
+              color={registerStage === 3 ? COLORS.primary : COLORS.icon}
+              size={14}
             />
           </View>
           {isLoading ? (
@@ -294,7 +310,7 @@ const PersonalInfo = ({ editProfile, editName, navigation }) => {
                 color={
                   !name || !birthday ? COLORS.textLight : COLORS.borderLinkBtn
                 }>
-                ثبت نام
+                بعدی
               </Text>
 
               {!isLoading && (
@@ -360,7 +376,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 50,
     marginVertical: rh(2),
-    // overflow: 'hidden',
   },
   birthdayContainer: {
     width: rw(100),
@@ -409,8 +424,7 @@ const styles = StyleSheet.create({
   stepperContainer: {
     flexDirection: 'row',
     width: rw(100),
-    marginBottom: rh(3),
-    marginTop: 'auto',
+    marginVertical: rh(3),
     alignItems: 'center',
     justifyContent: 'space-between',
   },

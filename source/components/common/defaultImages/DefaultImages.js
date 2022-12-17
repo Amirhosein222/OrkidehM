@@ -21,8 +21,8 @@ const DefaultImages = ({ route, navigation }) => {
     atEnterInfo,
     handleDefaultImage,
   } = route.params;
-  const { settings } = useContext(WomanInfoContext);
-
+  const { allSettings } = useContext(WomanInfoContext);
+  const [images, setImages] = useState();
   const [selectedImg, setSelectedImg] = useState('');
 
   const selectImages = image => {
@@ -75,6 +75,16 @@ const DefaultImages = ({ route, navigation }) => {
     }
   }, [isUpdating]);
 
+  useEffect(() => {
+    const result = [];
+    allSettings.forEach((s, index) => {
+      if (s.key === 'app_image_defaults[]') {
+        result.push(s.value);
+      }
+    });
+    setImages(result);
+  }, []);
+
   return (
     <BackgroundView>
       <ScreenHeader
@@ -88,11 +98,7 @@ const DefaultImages = ({ route, navigation }) => {
         </Text>
         {/* TODO: Fill flatlist data with settings['app_image_defaults[]'].value, which is an array */}
         <FlatList
-          data={
-            typeof settings['app_image_defaults[]'].value === 'array'
-              ? [...settings['app_image_defaults[]'].value]
-              : [settings['app_image_defaults[]'].value]
-          }
+          data={images}
           numColumns={2}
           key={(item, index) => index.toString()}
           renderItem={RenderImages}

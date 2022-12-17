@@ -3,6 +3,8 @@ import {
   getRelationsApi,
   getPregnancyPercentApi,
   storePeriodAutoApi,
+  getPartnerSympsApi,
+  getDaysGroupedWithCycles,
 } from './apis';
 
 export {
@@ -10,4 +12,6 @@ export {
   getRelationsApi,
   getPregnancyPercentApi,
   storePeriodAutoApi,
+  getPartnerSympsApi,
+  getDaysGroupedWithCycles,
 };

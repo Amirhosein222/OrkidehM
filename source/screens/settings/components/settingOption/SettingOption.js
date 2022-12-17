@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useContext } from 'react';
 import { StyleSheet, View, Pressable, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -22,6 +23,7 @@ const SettingOption = ({
   onBuyAccount = null,
   isFetching = false,
   handleVisible = null,
+  openExitModal,
 }) => {
   const navigation = useNavigation();
   const { fullInfo } = useContext(WomanInfoContext);
@@ -30,14 +32,20 @@ const SettingOption = ({
     if (name === 'vip') {
       return onBuyAccount();
     }
+    if (name === 'exit') {
+      return openExitModal();
+    }
     navigateTo && navigation.navigate(navigateTo);
   };
 
   const shareCode = function () {
-    Share.open({ message: fullInfo.regent_self, title: 'اشتراک گذاری کد شما' })
-      .then((res) => {})
-      .catch((err) => {
-        err && console.log(err);
+    Share.open({
+      message: fullInfo.regent_self,
+      title: `اشتراک گذاری کد شما: ${fullInfo.regent_self}`,
+    })
+      .then(res => {})
+      .catch(err => {
+        // err && console.log(err);
       });
   };
 
@@ -51,7 +59,10 @@ const SettingOption = ({
   };
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      disabled={name === 'invite' ? true : false}
+      style={styles.container}
+      onPress={handleOnPress}>
       {name === 'invite' ? (
         <View style={{ flexDirection: 'row' }}>
           <Pressable onPress={shareCode}>
@@ -62,14 +73,15 @@ const SettingOption = ({
           </Pressable>
         </View>
       ) : null}
+
       {name !== 'exit' && name !== 'invite' ? (
-        <Pressable hitSlop={7} onPress={handleOnPress}>
+        <View>
           {isFetching ? (
             <ActivityIndicator size="small" color={COLORS.textLight} />
           ) : (
             <NextPage style={ICON_SIZE} />
           )}
-        </Pressable>
+        </View>
       ) : (
         <View />
       )}
@@ -98,7 +110,7 @@ const SettingOption = ({
           Icon()
         )}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

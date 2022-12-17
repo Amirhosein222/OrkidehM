@@ -178,7 +178,7 @@ const FullPostScreen = ({ navigation, route }) => {
         <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <ActivityIndicator
             size="large"
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           />
         </View>
       </BackgroundView>
@@ -235,7 +235,7 @@ const FullPostScreen = ({ navigation, route }) => {
             <>
               <View style={styles.textContainer}>
                 <Text
-                  color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                  color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
                   medium
                   alignSelf="flex-end"
                   marginTop="20">
@@ -342,7 +342,7 @@ const FullPostScreen = ({ navigation, route }) => {
                 marginRight="5"
                 alignSelf="flex-start"
                 medium
-                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
                 ثبت
               </Text>
             </Pressable>

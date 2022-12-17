@@ -28,6 +28,7 @@ import { useIsPeriodDay } from '../../../libs/hooks';
 import { WIDTH, COLORS, SCROLL_VIEW_CONTAINER, rh, rw } from '../../../configs';
 
 import SendIcon from '../../../assets/icons/btns/enabled-send.svg';
+import PSendIcon from '../../../assets/icons/btns/penabled-send.svg';
 
 const ContactCounselorScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -174,17 +175,30 @@ const ContactCounselorScreen = ({ navigation }) => {
           </View>
           <Button
             title="ارسال"
-            // Icon={() => (
-            //   <SendIcon
-            //     style={{
-            //       width: 25,
-            //       height: 25,
-            //       marginTop: rh(0.5),
-            //       marginLeft: rw(1),
-            //     }}
-            //   />
-            // )}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+            Icon={
+              isPeriodDay
+                ? () => (
+                    <PSendIcon
+                      style={{
+                        width: 25,
+                        height: 25,
+                        marginTop: rh(0.5),
+                        marginLeft: rw(1),
+                      }}
+                    />
+                  )
+                : () => (
+                    <SendIcon
+                      style={{
+                        width: 25,
+                        height: 25,
+                        marginTop: rh(0.5),
+                        marginLeft: rw(1),
+                      }}
+                    />
+                  )
+            }
+            color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
             loading={isSending ? true : false}
             disabled={isSending ? true : false}
             onPress={() => sendMessageToCounselor()}

@@ -101,7 +101,12 @@ const ExpSympInfoModal = ({
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text color={COLORS.textCommentCal} bold medium marginTop={rh(2)}>
+          <Text
+            color={COLORS.textCommentCal}
+            textAlign="right"
+            bold
+            medium
+            marginTop={rh(2)}>
             {item.title}
           </Text>
           {item.description ? (
@@ -120,17 +125,17 @@ const ExpSympInfoModal = ({
             onPress={() => onStoreExpectation()}
             style={{
               ...styles.submitBtn,
-              borderColor: isPeriodDay ? COLORS.fireEngineRed : COLORS.primary,
+              borderColor: isPeriodDay ? COLORS.periodDay : COLORS.primary,
             }}>
             {isSending ? (
               <ActivityIndicator
-                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
                 size="small"
               />
             ) : (
               <Text
                 bold
-                color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}>
+                color={isPeriodDay ? COLORS.periodDay : COLORS.primary}>
                 ثبت
               </Text>
             )}

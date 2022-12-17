@@ -20,13 +20,12 @@ import {
   SCROLL_VIEW_CONTAINER,
   STATUS_BAR_HEIGHT,
 } from '../../configs';
-import { convertToFullDate, numberConverter } from '../../libs/helpers';
 
 import { CalendarModal } from '../../screens/calendar/components';
 
+import CalendarIcon from '../../assets/icons/drawerSettings/calendar-menu.svg';
 import SympMenu from '../../assets/icons/drawerSettings/symptoms-menu.svg';
 import MemMenu from '../../assets/icons/drawerSettings/memories-menu.svg';
-import SweetHeartMenu from '../../assets/icons/drawerSettings/sweetheart-menu.svg';
 import PsycheTestMenu from '../../assets/icons/drawerSettings/psychologicalTest-menu.svg';
 import ContactAnExpertMenu from '../../assets/icons/drawerSettings/contactAnExpert-menu.svg';
 import SettingMenu from '../../assets/icons/drawerSettings/setting-menu.svg';
@@ -217,14 +216,17 @@ const DrawerUi = ({ navigation }) => {
         </>
       )}
       <View style={styles.optionsContainer}>
-        {/* <Pressable
-          onPress={() => setShowCalendarModal(true)}
-          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
-          <Text size={11} bold marginRight="15">
-            تقویم
-          </Text>
-          <CalendarIcon style={{ width: 25, height: 25 }} />
-        </Pressable> */}
+        {womanInfo.activeRel ? (
+          <Pressable
+            onPress={() => setShowCalendarModal(true)}
+            style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+            <Text size={11} bold marginRight="15">
+              تقویم
+            </Text>
+            <CalendarIcon style={{ width: 25, height: 25 }} />
+          </Pressable>
+        ) : null}
+
         <Pressable
           onPress={() => navigation.navigate('PeriodTabs')}
           style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
@@ -234,20 +236,20 @@ const DrawerUi = ({ navigation }) => {
           <SympMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
-          onPress={() => navigate('MemoriesTab')}
+          onPress={() => navigate('Relations')}
           style={{ ...styles.itemContainer, marginLeft: rw(2) }}>
           <Text size={11} bold marginRight="15">
-            خاطرات من
+            روابط من
           </Text>
           <MemMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
-          onPress={() => navigate('PeriodTabs')}
-          style={{ ...styles.itemContainer, marginLeft: rw(1) }}>
+          onPress={() => navigate('Magazine')}
+          style={styles.itemContainer}>
           <Text size={11} bold marginRight="15">
-            دلبر
+            مجله
           </Text>
-          <SweetHeartMenu style={{ width: 25, height: 25 }} />
+          <Instruction style={{ width: 25, height: 25 }} />
         </Pressable>
         <Pressable
           onPress={() => navigate('PsychologyTests')}
@@ -257,29 +259,22 @@ const DrawerUi = ({ navigation }) => {
           </Text>
           <PsycheTestMenu style={{ width: 25, height: 25 }} />
         </Pressable>
-        {/* <Pressable
-          onPress={() => navigate('Charts')}
-          style={styles.itemContainer}>
-          <Text size={11} bold marginRight="15">
-            نمودار وضعیت من
-          </Text>
-          <ChartMenu style={{ width: 25, height: 25 }} />
-        </Pressable> */}
-
         <Pressable
-          onPress={() => navigate('LearningBank')}
+          onPress={() => navigate('ContactCounselor')}
           style={styles.itemContainer}>
           <Text size={11} bold marginRight="15">
-            مجله
+            ارتباط با کارشناس
           </Text>
-          <Instruction style={{ width: 25, height: 25 }} />
+          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
         </Pressable>
+
         <Divider
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.textLight}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.textLight}
           width="100%"
           style={{ marginVertical: rh(1.5) }}
           borderWidth={1.5}
         />
+
         <Pressable
           onPress={() => navigate('Settings')}
           style={styles.itemContainer}>
@@ -287,15 +282,6 @@ const DrawerUi = ({ navigation }) => {
             تنظیمات
           </Text>
           <SettingMenu style={{ width: 25, height: 25 }} />
-        </Pressable>
-        <Pressable
-          onPress={() => navigate('ContactCounselor')}
-          style={styles.itemContainer}>
-          <Text size={11} bold marginRight="15">
-            {' '}
-            ارتباط با کارشناس
-          </Text>
-          <ContactAnExpertMenu style={{ width: 25, height: 25 }} />
         </Pressable>
         <ExitModal
           visible={showModal}

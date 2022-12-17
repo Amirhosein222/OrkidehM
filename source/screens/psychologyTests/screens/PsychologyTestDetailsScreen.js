@@ -1,7 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
-import { StatusBar, ActivityIndicator, FlatList, Image } from 'react-native';
+import {
+  View,
+  StatusBar,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -28,7 +35,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
   const [showResultModal, setShowResultModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
   const selectedChoices = useRef({
-    gender: 'man',
+    gender: 'woman',
     test_id: params.testId,
     option_id: [],
   });
@@ -95,7 +102,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     if (submitAnswers.data && submitAnswers.data.is_successful) {
       setResetState(true);
       selectedChoices.current = {
-        gender: 'man',
+        gender: 'woman',
         test_id: params.testId,
         option_id: [],
       };
@@ -105,7 +112,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     if (submitAnswers.data && !submitAnswers.data.is_successful) {
       setResetState(true);
       selectedChoices.current = {
-        gender: 'man',
+        gender: 'woman',
         test_id: params.testId,
         option_id: [],
       };
@@ -128,7 +135,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
         />
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -147,19 +154,27 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
           disableBack={submitAnswers.isFetching}
         />
 
-        {params.testImage ? (
-          <Image
-            source={{ uri: baseUrl + params.testImage }}
-            style={{ width: 200, height: 200 }}
-            resizeMode="contain"
-          />
-        ) : (
-          <Octicons
-            name="checklist"
-            size={70}
-            color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
-          />
-        )}
+        <View style={styles.imageContainer}>
+          {params.testImage ? (
+            <Image
+              source={{ uri: baseUrl + params.testImage }}
+              style={{
+                width: 150,
+                height: 150,
+                borderRadius: 7,
+                // marginTop: rh(2),
+              }}
+              resizeMode="cover"
+            />
+          ) : (
+            <Octicons
+              name="checklist"
+              size={100}
+              style={{ marginLeft: rh(2) }}
+              color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+            />
+          )}
+        </View>
 
         {details.data && (
           <FlatList
@@ -171,12 +186,12 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
 
         <Button
           title="مشاهده نتیجه"
-          // Icon={() => <EnabledCheck style={ICON_SIZE} />}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          Icon={() => <EnabledCheck style={ICON_SIZE} />}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={() => sendTestAnswers()}
           loading={submitAnswers.isFetching}
           disabled={submitAnswers.isFetching}
-          style={{ marginTop: 'auto', marginBottom: rh(4), width: rw(80) }}
+          style={{ marginTop: 'auto', marginBottom: rh(3), width: rw(80) }}
         />
 
         {showResultModal && submitAnswers.data && details.data ? (
@@ -188,7 +203,7 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
               score: submitAnswers.data.data.score,
               total: submitAnswers.data.data.total,
               title: details.data.data.title,
-              des: details.data.data.description,
+              des: details.data.data.description || '',
               image: details.data.data.image,
             }}
           />
@@ -204,5 +219,19 @@ const PsychologyTestDetailsScreen = ({ navigation, route }) => {
     );
   }
 };
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    width: '90%',
+    height: rh(20),
+    marginTop: rh(2),
+    // backgroundColor: 'purple',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRightWidth: 3.5,
+    overflow: 'hidden',
+    borderRightColor: COLORS.textLight,
+  },
+});
 
 export default PsychologyTestDetailsScreen;

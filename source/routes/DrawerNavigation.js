@@ -2,7 +2,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import {
-  SymptomsScreen,
+  EditCyclesScreen,
   PostsScreen,
   PsychologyTestsScreen,
   PsychologyTestDetailsScreen,
@@ -12,7 +12,7 @@ import {
   FullPostScreen,
   LoveNotificationScreen,
   SettingsScreen,
-  LearningBankScreen,
+  MagazineScreen,
 } from '../screens';
 import { BottomTabs } from './BottomTabNavigator';
 
@@ -37,7 +37,6 @@ const DrawerNavigator = function () {
         },
       }}>
       <Drawer.Screen name="HomeTabs" component={BottomTabs} />
-      <Drawer.Screen name="Symptoms" component={SymptomsScreen} />
       <Drawer.Screen name="Posts" component={PostsScreen} />
       <Drawer.Screen name="FullPost" component={FullPostScreen} />
       <Drawer.Screen name="PsychologyTests" component={PsychologyTestsScreen} />
@@ -56,7 +55,8 @@ const DrawerNavigator = function () {
         component={LoveNotificationScreen}
       />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="LearningBank" component={LearningBankScreen} />
+      <Drawer.Screen name="Magazine" component={MagazineScreen} />
+      <Drawer.Screen name="EditCycles" component={EditCyclesScreen} />
     </Drawer.Navigator>
   );
 };

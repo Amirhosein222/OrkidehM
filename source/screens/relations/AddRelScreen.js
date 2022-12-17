@@ -6,13 +6,11 @@ import ImagePicker from 'react-native-image-crop-picker';
 import SelectPictureModal from '../../components/informations/SelectPictureModal';
 import {
   Button,
-  Divider,
   InputRow,
   Snackbar,
   ScreenHeader,
   BackgroundView,
 } from '../../components/common';
-import SelectPicture from './components/selectPicture';
 
 import { addRelApi } from './apis';
 import { rw, rh, COLORS, ICON_SIZE } from '../../configs';
@@ -112,31 +110,18 @@ const AddRelScreen = ({ navigation, route }) => {
   return (
     <BackgroundView>
       <View style={styles.content}>
-        <ScreenHeader
-          title="افزودن پارتنر جدید"
-          disableBack={addRel.isFetching}
-        />
-        <SelectPicture
-          picture={picture}
-          setShowPictureModal={setShowPictureModal}
-        />
-
-        <Divider
-          width={rw(80)}
-          color={COLORS.textDark}
-          style={{ borderBottomWidth: 0.4, marginTop: rh(4) }}
-        />
-        <View style={{ marginTop: rh(3) }}>
+        <ScreenHeader title="افزودن دلبر " disableBack={addRel.isFetching} />
+        <View style={{ marginTop: 'auto', marginBottom: 'auto' }}>
           <InputRow
             title="نام :"
-            placeholder="نام پارتنر را اینجا وارد کنید"
+            placeholder="نام دلبر را اینجا وارد کنید"
             handleTextInput={setPartner}
             name="pName"
             containerStyle={styles.input}
           />
           <InputRow
             title="شماره موبایل :"
-            placeholder="شماره موبایل پارتنر را اینجا وارد کنید"
+            placeholder="شماره موبایل دلبر را اینجا وارد کنید"
             handleTextInput={setPartnerMobile}
             name="pMobile"
             kType="numeric"
@@ -148,10 +133,10 @@ const AddRelScreen = ({ navigation, route }) => {
           disabled={addRel.isFetching}
           loading={addRel.isFetching}
           title="ثبت اطلاعات"
-          // Icon={() => <EnabledCheck style={ICON_SIZE} />}
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          Icon={() => <EnabledCheck style={ICON_SIZE} />}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           onPress={onSubmitRel}
-          style={{ marginTop: 'auto', marginBottom: rh(4) }}
+          style={{ marginBottom: rh(4) }}
         />
       </View>
       {showPictureModal && (

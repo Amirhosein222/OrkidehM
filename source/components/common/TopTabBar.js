@@ -26,7 +26,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
 
   const handleTabColors = focused => {
     if (isPeriodDay) {
-      return focused ? COLORS.fireEngineRed : COLORS.textLight;
+      return focused ? COLORS.periodDay : COLORS.textLight;
     } else {
       return focused ? COLORS.primary : COLORS.textLight;
     }
@@ -49,7 +49,7 @@ const TopTabBar = ({ state, descriptors, navigation }) => {
       />
       <Header
         navigation={navigation}
-        style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT + rh(2) }}
+        style={{ alignSelf: 'center', marginTop: STATUS_BAR_HEIGHT }}
         setShowLovePopup={setShowLove}
         setSnackbar={setSnackbar}
         ads={adsSettings && adsSettings.value}

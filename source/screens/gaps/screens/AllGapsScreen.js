@@ -9,14 +9,16 @@ import {
 } from '../../../components/common';
 import GapCard from '../components/gapCard';
 
-import { getAllGapsApi } from '../apis';
+import { getAllGapsApi } from '../apis/apis';
 import { COLORS, rh } from '../../../configs';
 import { useApi, useIsPeriodDay } from '../../../libs/hooks';
 
 const AllGapsScreen = ({ navigation }) => {
   const isPeriodDay = useIsPeriodDay();
   const [showReportModal, setShowReportModal] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [snackbar, setSnackbar] = useState({ msg: '', visible: false });
+  const [gaps, setGaps] = useState([]);
   const [allGaps, setAllGaps] = useApi(() => getAllGapsApi());
   const selectedMemId = useRef(null);
 
@@ -29,6 +31,13 @@ const AllGapsScreen = ({ navigation }) => {
   const handleReportModal = mId => {
     selectedMemId.current = mId;
     setShowReportModal(true);
+  };
+
+  const onRefresh = () => {
+    //set isRefreshing to true
+    setIsRefreshing(true);
+    setAllGaps();
+    // and set isRefreshing to false at the end of your callApiMethod()
   };
 
   const RenderMemory = function ({ item }) {
@@ -48,6 +57,13 @@ const AllGapsScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    if (allGaps.data && allGaps.data.is_successful && isRefreshing) {
+      setIsRefreshing(false);
+    }
+    if (allGaps.data && allGaps.data.is_successful) {
+      setGaps(allGaps.data.data.reverse());
+    }
+
     allGaps.data &&
       !allGaps.data.is_successful &&
       setSnackbar({
@@ -61,7 +77,7 @@ const AllGapsScreen = ({ navigation }) => {
       <BackgroundView>
         <ActivityIndicator
           size="large"
-          color={isPeriodDay ? COLORS.fireEngineRed : COLORS.primary}
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
           style={{ marginTop: 'auto', marginBottom: 'auto' }}
         />
       </BackgroundView>
@@ -74,9 +90,11 @@ const AllGapsScreen = ({ navigation }) => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        {allGaps.data && allGaps.data.data.length ? (
+        {gaps.length ? (
           <FlatList
-            data={allGaps.data.data}
+            data={gaps}
+            onRefresh={onRefresh}
+            refreshing={isRefreshing}
             keyExtractor={item => String(item.id)}
             renderItem={RenderMemory}
             contentContainerStyle={{
@@ -100,7 +118,6 @@ const AllGapsScreen = ({ navigation }) => {
             message={snackbar.msg}
             type={snackbar.type}
             handleVisible={handleVisible}
-            atBottom={true}
           />
         ) : null}
       </BackgroundView>

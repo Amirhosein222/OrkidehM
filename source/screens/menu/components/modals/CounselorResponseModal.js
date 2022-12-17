@@ -4,10 +4,12 @@ import { View, StyleSheet, Image } from 'react-native';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import { Text } from '../../../../components/common';
+import { Button, Text } from '../../../../components/common';
 
 import { useIsPeriodDay } from '../../../../libs/hooks';
-import { baseUrl, COLORS, rh, rw } from '../../../../configs';
+import { COLORS, rh, rw } from '../../../../configs';
+
+import DoneImage from '../../../../assets/vectors/register/done.png';
 
 const CounselorResponseModal = ({ visible, closeModal }) => {
   const isPeriodDay = useIsPeriodDay();
@@ -39,22 +41,40 @@ const CounselorResponseModal = ({ visible, closeModal }) => {
         </View>
         <View style={styles.imageContainer}>
           <Image
-            source={require('../../../../assets/images/icons8-heart-100.png')}
-            style={styles.icon}
+            source={DoneImage}
+            style={{ width: 180, height: 180 }}
+            resizeMode="contain"
           />
         </View>
 
-        <Text color={COLORS.expSympTitle} bold large marginTop={rh(2)}>
-          پیام شما ثبت شد
+        <Text
+          size={14}
+          color={COLORS.expSympTitle}
+          bold
+          large
+          marginTop={rh(2)}>
+          پیام شما با موفقیت ثبت شد
         </Text>
         <Text
-          color={COLORS.dark}
-          marginTop={rh(2)}
+          color={COLORS.textLight}
+          bold
+          marginTop={rh(1)}
+          marginBottom={rh(2)}
           textAlign="right"
           alignSelf="center">
-          پیام شما با موفقیت برای ما ارسال شد پس از بازبینی توسظ کارشناسان ما،
-          با شما تماس گرفته می شودد
+          پیام شما با موفقیت برای ما ارسال شد پس از بازبینی توسط کارشناسان ما،
+          با شما تماس گرفته می شود
         </Text>
+        <Button
+          title="بستن"
+          color={isPeriodDay ? COLORS.periodDay : COLORS.primary}
+          onPress={() => closeModal()}
+          style={{
+            width: rw(60),
+            marginBottom: rh(0),
+            marginTop: 'auto',
+          }}
+        />
       </View>
     </Modal>
   );
@@ -89,6 +109,7 @@ const styles = StyleSheet.create({
     paddingVertical: rh(2),
     elevation: 5,
     alignItems: 'center',
+    // height: rh(45),
   },
   checkBox: {
     flexDirection: 'row',
@@ -102,8 +123,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     width: rw(71),
-    borderRightWidth: 3,
-    borderRightColor: COLORS.icon,
     marginTop: rh(4),
   },
 });

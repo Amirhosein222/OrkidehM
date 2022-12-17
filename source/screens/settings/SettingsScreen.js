@@ -14,8 +14,6 @@ import {
 import { baseUrl, COLORS, rh, rw } from '../../configs';
 import { WomanInfoContext } from '../../libs/context/womanInfoContext';
 
-import Reminder from '../../assets/icons/drawerSettings/reminder.svg';
-import Relationships from '../../assets/icons/drawerSettings/relationships.svg';
 import Privacy from '../../assets/icons/drawerSettings/privacy.svg';
 import Guide from '../../assets/icons/drawerSettings/guide.svg';
 import AboutUs from '../../assets/icons/drawerSettings/aboutUs.svg';
@@ -51,29 +49,11 @@ const SettingsScreen = ({ navigation }) => {
           borderWidth={0.5}
           style={{ marginBottom: rh(1), marginTop: rh(3) }}
         />
-        {/* <SettingOption
-          title="سیکل قاعدگی"
-          icon="cycle"
-          name="cycles"
-          navigateTo="Cycles"
-        />
-        <SettingOption
-          title="یادآورها"
-          Icon={() => <Reminder style={{ width: 25, height: 25 }} />}
-          name="default"
-          navigateTo="Reminders"
-        /> */}
         <SettingOption
           title="حریم خصوصی"
           Icon={() => <Privacy style={{ width: 25, height: 25 }} />}
           name="default"
           navigateTo="Privacy"
-        />
-        <SettingOption
-          title="روابط من"
-          Icon={() => <Relationships style={{ width: 25, height: 25 }} />}
-          name="default"
-          navigateTo="Relations"
         />
         <Divider
           color={COLORS.textDark}
